@@ -1,4 +1,13 @@
 = ConensusJ Wallet Framework
+Sean Gilligan <https://github.com/msgilligan>
+v0.0.1-SNAPSHOT
+:description: ConsensusJ Wallet Framework README.
+:wf-version: 0.0.1-SNAPSHOT
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
 
 A framework for writing cryptocurrency wallets in https://docs.oracle.com/javase/specs/jls/se12/html/index.html[Java] or other https://en.wikipedia.org/wiki/List_of_JVM_languages#JVM_languages[OpenJDK (Java VM)] languages. The intial focus is on https://bitcoin.org/[Bitcoin] using https://github.com/bitcoinj/bitcoinj/[bitcoinj] but the intention is to add other cryptocurrencies as interest, funding, and contributions permit. Due to https://github.com/msgilligan[msgilligan]'s work on https://github.com/OmniLayer/OmniJ[OmniJ] it is likely that https://www.omnilayer.org[Omni Layer] support will be added as an asset metalayer above Bitcoin.
 
@@ -10,13 +19,15 @@ Supernaut is (will be) a generalized application framework that could potentiall
 
 === Design Goals
 
+NOTE:: If a framework or library like this already exists, please https://github.com/ConsensusJ/wallet-framework/issues[let us know] ASAP!
+
 We have researched existing frameworks for JavaFX and haven't found anything that seems well-suited for the following criteria:
 
-NOTE:: If a framework like this already exists, please let us know ASAP!
 
 * Simple
 ** Minimizes abstraction and inheritance
 ** Avoids imposing architectural patterns
+** Try to be more of a library than a framework
 * Provides support for compile-time dependency injection (e.g. https://micronaut.io[Micronaut])
 * Designed for Java apps shipped with a bundled runtime, (e.g. built with jpackage)
 * Agressively tracks latest JDK for JavaFX, recent Android versions
