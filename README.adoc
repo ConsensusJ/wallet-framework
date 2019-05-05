@@ -1,0 +1,52 @@
+= ConensusJ Wallet Framework
+
+A framework for writing cryptocurrency wallets in https://docs.oracle.com/javase/specs/jls/se12/html/index.html[Java] or other https://en.wikipedia.org/wiki/List_of_JVM_languages#JVM_languages[OpenJDK (Java VM)] languages. The intial focus is on https://bitcoin.org/[Bitcoin] using https://github.com/bitcoinj/bitcoinj/[bitcoinj] but the intention is to add other cryptocurrencies as interest, funding, and contributions permit. Due to https://github.com/msgilligan[msgilligan]'s work on https://github.com/OmniLayer/OmniJ[OmniJ] it is likely that https://www.omnilayer.org[Omni Layer] support will be added as an asset metalayer above Bitcoin.
+
+The inital focus is on creating desktop wallets using JavaFX, but there will be non-GUI components that could be used in other environments such as Android, iOS, and server/cloud environments.
+
+== Supernaut
+
+Supernaut is (will be) a generalized application framework that could potentially be used for more than just cryptocurrency wallets. Modules with names beginning with `supernaut` will have no dependencies on any cryptocurrency-related libraries.
+
+=== Design Goals
+
+We have researched existing frameworks for JavaFX and haven't found anything that seems well-suited for the following criteria:
+
+NOTE:: If a framework like this already exists, please let us know ASAP!
+
+* Simple
+** Minimizes abstraction and inheritance
+** Avoids imposing architectural patterns
+* Provides support for compile-time dependency injection (e.g. https://micronaut.io[Micronaut])
+* Designed for Java apps shipped with a bundled runtime, (e.g. built with jpackage)
+* Agressively tracks latest JDK for JavaFX, recent Android versions
+** JDK 12 or later for JavaFX components
+** JDK 8 (with multi-release JARs?) for base components and Android
+* Minimal dependencies, minimal transitive depedencies
+** Core components in pure Java (no additional language runtimes)
+** Keep packaged/bundled apps as small as possible
+** Minimal dependencies simplifies security review
+** Potential for use by other frameworks
+* AOT-friendly
+** Avoids use of dynamic runtime features
+** Friendly towards Ahead-of-Time (AOT) compilation platforms
+*** Android
+*** GraalVM
+* Provides support for first-class native-looking apps
+** Follows each platform's UI guidelines
+** First-class platform integration
+** macOS integration
+*** Support for https://developer.apple.com/app-sandboxing/[App Sandbox]  and Mac App Store
+*** Native-looking  https://developer.apple.com/design/human-interface-guidelines/macos/menus/menu-bar-menus/[macOS Menu Bar Menus] (with help from https://github.com/codecentric/NSMenuFX[NSMenuFX])
+*** Integration with Apple's https://developer.apple.com/documentation/os/logging[unified logging system].
+** May use additional libraries (e.g. NSMenuFX) on a specific platform
+* Non-goal: reusable UI on desktop and mobile
+** Android apps should have custom UI written with Android SDK
+** iOS should use UIKit (adapter suggestions/contributions welcome)
+* RxJava support (should this be optional or built-in?)
+
+== Wallet Framework
+
+Builds on top of Supernaut with features and libraries for cryptocurrency wallet support.
+
+
