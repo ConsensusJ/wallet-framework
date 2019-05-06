@@ -19,7 +19,7 @@ Supernaut is (will be) a generalized application framework that could potentiall
 
 === Design Goals
 
-NOTE:: If a framework or library like this already exists, please https://github.com/ConsensusJ/wallet-framework/issues[let us know] ASAP!
+NOTE: If a framework or library like this already exists, please https://github.com/ConsensusJ/wallet-framework/issues[let us know] ASAP!
 
 We have researched existing frameworks for JavaFX and haven't found anything that seems well-suited for the following criteria:
 
@@ -58,6 +58,6 @@ We have researched existing frameworks for JavaFX and haven't found anything tha
 
 == Wallet Framework
 
-Builds on top of Supernaut with features and libraries for cryptocurrency wallet support.
+Builds on top of Supernaut with features and libraries for cryptocurrency wallet support. Will use libaries from https://github.com/ConsensusJ/consensusj/[ConsensusJ/consensusj] as appropriate.
 
 
