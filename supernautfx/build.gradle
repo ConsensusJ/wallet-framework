@@ -1,0 +1,8 @@
+plugins {
+    id 'org.openjfx.javafxplugin' version '0.0.7'
+    id 'org.javamodularity.moduleplugin' version "1.5.0"
+}
+
+javafx {
+    modules = [ 'javafx.graphics' ]
+}

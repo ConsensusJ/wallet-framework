@@ -1,0 +1,36 @@
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin'   version '0.0.7'
+    id 'org.beryx.jlink'            version '2.10.2'
+}
+
+dependencies {
+    implementation project (':supernautfx')
+
+    implementation "javax.inject:javax.inject:1"
+
+}
+
+//mainClassName = "$moduleName/org.consensusj.supernautfx.sample.hello.HelloApplication"
+mainClassName = "org.consensusj.supernautfx.sample.hello.HelloApplication"
+
+javafx {
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.graphics']
+}
+
+jlink {
+    addExtraDependencies("javafx")
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    launcher {
+        name = 'Supernaut Hello'
+        jvmArgs = []
+    }
+    mergedModule {
+        //requires 'org.slf4j'
+    }
+    jpackage {
+        skipInstaller = false
+        imageOptions = ["--verbose", "--app-version", version]
+        installerOptions = ["--app-version", version]
+    }
+}
