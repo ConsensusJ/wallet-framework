@@ -1,6 +1,6 @@
 package org.consensusj.supernautfx.sample.hello.service;
 
-import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 /**
@@ -10,8 +10,7 @@ import javax.inject.Singleton;
 public class GreetingService {
     private final String name;
 
-    @Inject
-    public GreetingService(String name) {
+    public GreetingService(@Named("Greeted") String name) {
         this.name = name;
     }
 

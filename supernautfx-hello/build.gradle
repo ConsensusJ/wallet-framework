@@ -1,21 +1,29 @@
 plugins {
     id 'application'
-    id 'org.openjfx.javafxplugin'   version '0.0.7'
-    id 'org.beryx.jlink'            version '2.10.2'
+    id 'org.openjfx.javafxplugin'           version '0.0.7'
+    id 'org.beryx.jlink'                    version '2.10.2'
+    id 'org.javamodularity.moduleplugin'    version "1.5.0"
 }
 
 dependencies {
     implementation project (':supernautfx')
 
     implementation "javax.inject:javax.inject:1"
+    implementation"io.micronaut:micronaut-inject-java:1.1.0"
 
+    implementation "org.slf4j:slf4j-jdk14:${slf4jVersion}"
+
+    annotationProcessor "io.micronaut:micronaut-inject-java:1.1.0"
 }
 
-//mainClassName = "$moduleName/org.consensusj.supernautfx.sample.hello.HelloApplication"
-mainClassName = "org.consensusj.supernautfx.sample.hello.HelloApplication"
+mainClassName = "$moduleName/org.consensusj.supernautfx.sample.hello.HelloApplication"
+
+patchModules.config = [
+        "java.annotation=jsr305-3.0.2.jar"
+]
 
 javafx {
-    modules = ['javafx.controls', 'javafx.fxml', 'javafx.graphics']
+    modules = ['javafx.controls']
 }
 
 jlink {
@@ -26,7 +34,7 @@ jlink {
         jvmArgs = []
     }
     mergedModule {
-        //requires 'org.slf4j'
+        requires 'org.slf4j'
     }
     jpackage {
         skipInstaller = false

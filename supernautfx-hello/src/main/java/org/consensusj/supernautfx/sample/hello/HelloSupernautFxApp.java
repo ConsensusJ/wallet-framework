@@ -7,7 +7,6 @@ import javafx.stage.Stage;
 import org.consensusj.supernautfx.SupernautFxApp;
 import org.consensusj.supernautfx.sample.hello.service.GreetingService;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
@@ -17,7 +16,6 @@ import javax.inject.Singleton;
 public class HelloSupernautFxApp implements SupernautFxApp {
     private final GreetingService greetingService;
 
-    @Inject
     public HelloSupernautFxApp(GreetingService greetingService) {
         this.greetingService = greetingService;
     }
