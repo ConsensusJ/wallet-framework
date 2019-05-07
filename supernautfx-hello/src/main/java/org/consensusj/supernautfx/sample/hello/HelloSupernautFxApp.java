@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.consensusj.supernautfx.SupernautFxApp;
+import org.consensusj.supernautfx.SupernautFxLauncher;
 import org.consensusj.supernautfx.sample.hello.service.GreetingService;
 
 import javax.inject.Singleton;
@@ -15,6 +16,11 @@ import javax.inject.Singleton;
 @Singleton
 public class HelloSupernautFxApp implements SupernautFxApp {
     private final GreetingService greetingService;
+
+
+    public static void main(String[] args) {
+        SupernautFxLauncher.supernautLaunch(HelloSupernautFxApp.class, args);
+    }
 
     public HelloSupernautFxApp(GreetingService greetingService) {
         this.greetingService = greetingService;

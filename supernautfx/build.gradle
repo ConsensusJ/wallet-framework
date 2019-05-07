@@ -6,3 +6,12 @@ plugins {
 javafx {
     modules = [ 'javafx.graphics' ]
 }
+
+dependencies {
+    implementation"io.micronaut:micronaut-inject-java:1.1.0"
+}
+
+patchModules.config = [
+        "java.annotation=jsr305-3.0.2.jar"
+]
+

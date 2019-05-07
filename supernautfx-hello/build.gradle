@@ -16,7 +16,7 @@ dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java:1.1.0"
 }
 
-mainClassName = "$moduleName/org.consensusj.supernautfx.sample.hello.HelloApplication"
+mainClassName = "$moduleName/org.consensusj.supernautfx.sample.hello.HelloSupernautFxApp"
 
 patchModules.config = [
         "java.annotation=jsr305-3.0.2.jar"
