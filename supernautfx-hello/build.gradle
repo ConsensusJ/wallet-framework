@@ -9,7 +9,7 @@ dependencies {
     implementation project (':supernautfx')
 
     implementation "javax.inject:javax.inject:1"
-    implementation"io.micronaut:micronaut-inject-java:1.1.0"
+    implementation "io.micronaut:micronaut-inject-java:1.1.0"
 
     implementation "org.slf4j:slf4j-jdk14:${slf4jVersion}"
 
