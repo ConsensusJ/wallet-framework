@@ -40,6 +40,7 @@ allprojects {
         dryRun = false // whether to run this as dry-run, without deploying
         publications = ['jar'] // When uploading Maven-based publication files
         pkg {
+            userOrg = 'consensusj'
             repo = 'maven'
             name = 'wallet-framework'
             desc = 'Modular cryptocurrency wallet framework, libraries, and components'
