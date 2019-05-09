@@ -1,4 +1,5 @@
 plugins {
+    id 'groovy'
     id 'application'
     id 'org.openjfx.javafxplugin'           version '0.0.7'
     id 'org.beryx.jlink'                    version '2.10.2'
@@ -11,6 +12,7 @@ dependencies {
     implementation "javax.inject:javax.inject:1"
     implementation "io.micronaut:micronaut-inject-java:1.1.0"
 
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
     implementation "org.slf4j:slf4j-jdk14:${slf4jVersion}"
 
     annotationProcessor "io.micronaut:micronaut-inject-java:1.1.0"
@@ -23,7 +25,13 @@ patchModules.config = [
 ]
 
 javafx {
-    modules = ['javafx.controls']
+    modules = ['javafx.controls', 'javafx.fxml']
+}
+
+test {
+    moduleOptions {
+        runOnClasspath = true
+    }
 }
 
 jlink {

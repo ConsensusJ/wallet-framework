@@ -6,6 +6,7 @@ module org.consensusj.supernautfx.hello {
 
     requires javafx.graphics;
     requires javafx.controls;
+    requires javafx.fxml;
 
     requires org.slf4j;
     requires org.slf4j.jul;
@@ -19,7 +20,7 @@ module org.consensusj.supernautfx.hello {
      */
     requires io.micronaut.inject;
 
-    opens org.consensusj.supernautfx.sample.hello to javafx.graphics;
+    opens org.consensusj.supernautfx.sample.hello to javafx.graphics, javafx.fxml, java.base;
     exports org.consensusj.supernautfx.sample.hello;
     exports org.consensusj.supernautfx.sample.hello.service;
 }

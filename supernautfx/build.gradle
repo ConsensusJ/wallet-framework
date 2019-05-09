@@ -1,17 +1,30 @@
 plugins {
+    id 'groovy'
     id 'org.openjfx.javafxplugin' version '0.0.7'
     id 'org.javamodularity.moduleplugin' version "1.5.0"
 }
 
 javafx {
-    modules = [ 'javafx.graphics' ]
+    modules = [ 'javafx.graphics', 'javafx.fxml' ]
 }
 
 dependencies {
-    implementation"io.micronaut:micronaut-inject-java:1.1.0"
+    implementation "javax.inject:javax.inject:1"
+    implementation "io.micronaut:micronaut-inject-java:1.1.0"
+    annotationProcessor "io.micronaut:micronaut-inject-java:1.1.0"
 }
+
+sourceCompatibility = 11
+targetCompatibility = 11
 
 patchModules.config = [
         "java.annotation=jsr305-3.0.2.jar"
 ]
+
+test {
+    moduleOptions {
+        runOnClasspath = true
+    }
+}
+
 

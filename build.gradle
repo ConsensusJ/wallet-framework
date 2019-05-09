@@ -35,8 +35,14 @@ allprojects {
 }
 
 subprojects {
-    sourceCompatibility = 11
-    targetCompatibility = 11
+    /*
+     * Supernaut will target recent JDK versions. For now library modules will
+     * target JDK 11 and sample apps will use JDK 12. We intend to migrate to
+     * JDK 13 as soon as it is final, since 13 should have `jpackage` included.
+     *  We want to focus on jpackaged apps and these should always use recent JDK.
+     */
+    sourceCompatibility = 12
+    targetCompatibility = 12
 
     dependencies {
         implementation "org.slf4j:slf4j-api:${slf4jVersion}"
