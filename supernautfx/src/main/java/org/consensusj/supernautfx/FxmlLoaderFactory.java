@@ -3,14 +3,14 @@ package org.consensusj.supernautfx;
 import io.micronaut.context.BeanContext;
 import javafx.fxml.FXMLLoader;
 
-import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.net.URL;
 
 /**
  * Factory for providing FXMLLoaders that do full DI
  */
 @Singleton
-public class FxmlLoaderFactory implements Provider<FXMLLoader> {
+public class FxmlLoaderFactory  {
     BeanContext context;
 
     public FxmlLoaderFactory(BeanContext context) {
@@ -21,10 +21,14 @@ public class FxmlLoaderFactory implements Provider<FXMLLoader> {
         return context.getBean(clazz);
     }
 
-    @Override
     public FXMLLoader get() {
-        FXMLLoader loader = new FXMLLoader();
+        return get(null);
+    }
+
+    public FXMLLoader get(URL location) {
+        FXMLLoader loader = new FXMLLoader(location);
         loader.setControllerFactory(this::getControllerFactory);
         return loader;
     }
+
 }

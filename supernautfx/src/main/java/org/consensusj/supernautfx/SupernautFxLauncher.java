@@ -3,10 +3,8 @@ package org.consensusj.supernautfx;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.env.Environment;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 
-import javax.inject.Provider;
 
 /**
  * SupernautFX app launcher.
@@ -18,10 +16,10 @@ public class SupernautFxLauncher extends Application {
     private static Class<? extends SupernautFxApp> mainClass;
     private ApplicationContext ctx;
     private SupernautFxApp app;
-    private Provider<FXMLLoader> loaderFactory;
+    private FxmlLoaderFactory loaderFactory;
 
     /**
-     * Use this static mathod to start your SupernautFX application
+     * Use this static method to start your SupernautFX application
      *
      * @param mainClass The main class for your app, an injectable bean
      * @param args The args from your main routine
@@ -37,7 +35,7 @@ public class SupernautFxLauncher extends Application {
                 //.mainClass(mainClass)
                 .environments(Environment.CLI).build();
         loaderFactory = new FxmlLoaderFactory(ctx);
-        ctx.registerSingleton(Provider.class, loaderFactory);
+        ctx.registerSingleton(FxmlLoaderFactory.class, loaderFactory);
         ctx.start();
         app = ctx.getBean(mainClass);
     }
