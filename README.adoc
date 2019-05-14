@@ -1,8 +1,8 @@
-= ConensusJ Wallet Framework
+= ConsensusJ Wallet Framework
 Sean Gilligan <https://github.com/msgilligan>
-v0.0.1-SNAPSHOT
+v0.0.2
 :description: ConsensusJ Wallet Framework README.
-:wf-version: 0.0.1-SNAPSHOT
+:wf-version: 0.0.2
 :tip-caption: :bulb:
 :note-caption: :information_source:
 :important-caption: :heavy_exclamation_mark:
