@@ -18,6 +18,9 @@ dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java:1.1.0"
 }
 
+sourceCompatibility = 12
+targetCompatibility = 12
+
 mainClassName = "$moduleName/org.consensusj.supernautfx.sample.hello.HelloSupernautFxApp"
 
 patchModules.config = [

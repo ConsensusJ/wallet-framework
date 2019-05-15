@@ -31,6 +31,7 @@ allprojects {
 
     repositories {
         jcenter()
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -41,8 +42,8 @@ subprojects {
      * JDK 13 as soon as it is final, since 13 should have `jpackage` included.
      *  We want to focus on jpackaged apps and these should always use recent JDK.
      */
-    sourceCompatibility = 12
-    targetCompatibility = 12
+    sourceCompatibility = 11
+    targetCompatibility = 11
 
     dependencies {
         implementation "org.slf4j:slf4j-api:${slf4jVersion}"

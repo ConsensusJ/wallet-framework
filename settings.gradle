@@ -1,2 +1,5 @@
 include 'supernautfx'
 include 'supernautfx-hello'
+include 'airgaplib'
+include 'airgapfx'
+
