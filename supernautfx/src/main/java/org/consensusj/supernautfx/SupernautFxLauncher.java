@@ -38,6 +38,7 @@ public class SupernautFxLauncher extends Application {
         ctx.registerSingleton(FxmlLoaderFactory.class, loaderFactory);
         ctx.start();
         app = ctx.getBean(mainClass);
+        app.init();
     }
 
     @Override
