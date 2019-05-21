@@ -17,8 +17,13 @@
 package airgapfxwallet;
 
 import com.blockchaincommons.airgap.fx.camera.CameraService;
+import com.google.common.collect.ImmutableList;
 import javafx.stage.Stage;
+import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.params.TestNet3Params;
+import org.bitcoinj.script.Script;
+import org.bitcoinj.wallet.DeterministicKeyChain;
+import org.bitcoinj.wallet.KeyChainGroupStructure;
 import org.bitcoinj.walletfx.WalletFxApp;
 import org.consensusj.supernautfx.FxmlLoaderFactory;
 import org.consensusj.supernautfx.SupernautFxLauncher;
@@ -29,6 +34,8 @@ import javax.inject.Singleton;
 import java.util.concurrent.TimeoutException;
 
 import com.github.sarxos.webcam.Webcam;
+
+import static org.bitcoinj.wallet.DeterministicKeyChain.BIP44_ACCOUNT_ZERO_PATH;
 
 /**
  * Main class for WalletTemplate that uses SupernautFx and does not have
@@ -41,6 +48,22 @@ public class AirgapFxWalletApp extends WalletFxApp {
     private static final String mainFxmlResName = "main.fxml";
     private static final String mainCssResName = "wallet.css";
 
+
+    // This may need to change to BIP
+    private static KeyChainGroupStructure STRUCTURE_BIP44 = outputScriptType -> {
+        if (outputScriptType != null && outputScriptType != Script.ScriptType.P2PKH) {
+            if (outputScriptType == Script.ScriptType.P2WPKH) {
+                // TODO: I think this is incorrect
+                return BIP44_ACCOUNT_ZERO_PATH;
+            } else {
+                throw new IllegalArgumentException(outputScriptType.toString());
+            }
+        } else {
+            return BIP44_ACCOUNT_ZERO_PATH;
+        }
+    };
+
+
     public CameraService cameraService = null;
     private static final int GET_WEBCAMS_TIMEOUT = 1000;   // Timeout in milliseconds
 
@@ -51,6 +74,8 @@ public class AirgapFxWalletApp extends WalletFxApp {
     AirgapFxWalletApp(FxmlLoaderFactory loaderFactory) {
         super(loaderFactory,
                 TestNet3Params.get(),
+                Script.ScriptType.P2PKH,
+                STRUCTURE_BIP44,
                 mainFxmlResName,
                 mainCssResName);
     }
