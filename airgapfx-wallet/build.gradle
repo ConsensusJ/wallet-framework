@@ -25,7 +25,9 @@ dependencies {
     implementation project(':airgapfx')
 
     implementation "${bitcoinjGroup}:${bitcoinjArtifact}:${bitcoinjVersion}"
-    implementation "${bitcoinjGroup}:${bitcoinjWalletFxArtifact}:${bitcoinjVersion}"
+    implementation ("${bitcoinjGroup}:${bitcoinjWalletFxArtifact}:${bitcoinjVersion}") {
+        exclude group: 'org.openjfx'    
+    }
 
     implementation 'org.consensusj.supernautfx:supernautfx:0.0.2'
     implementation "io.micronaut:micronaut-inject-java:1.1.0"
