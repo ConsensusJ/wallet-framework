@@ -9,6 +9,8 @@ plugins {
 sourceCompatibility = 12
 targetCompatibility = 12
 
+version = '0.1.1'
+
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
 
