@@ -33,6 +33,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.walletfx.OverlayableWindowController;
+import org.bitcoinj.walletfx.SendMoneyController;
 import org.bitcoinj.walletfx.WalletFxApp;
 import org.bitcoinj.walletfx.WalletMainWindowController;
 import org.bitcoinj.walletfx.WalletSettingsController;
@@ -68,7 +69,7 @@ public class AirgapFxMainWindowController extends WalletMainWindowController {
         this.app = app;
     }
 
-        // Called by FXMLLoader.
+    // Called by FXMLLoader.
     public void initialize() {
         addressControl.setOpacity(0.0);
     }
@@ -89,7 +90,9 @@ public class AirgapFxMainWindowController extends WalletMainWindowController {
     @FXML
     private void sendMoneyOut(ActionEvent event) {
         // Hide this UI and show the send money UI. This UI won't be clickable until the user dismisses send_money.
-        overlayUI("send_money.fxml");
+        OverlayableWindowController.OverlayUI<SendMoneyController> screen = overlayUI("send_money.fxml");
+        AirGapSigner signer = new AirGapSigner(app.getWallet(), this);
+        screen.controller.setSigner(signer);  // Sign via QR codes over "Air Gap"
     }
 
     @FXML
