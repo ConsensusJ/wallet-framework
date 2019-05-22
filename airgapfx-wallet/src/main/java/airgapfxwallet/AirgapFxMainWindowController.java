@@ -16,25 +16,21 @@
 
 package airgapfxwallet;
 
+import com.blockchaincommons.airgap.fx.components.QrCaptureView;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
-import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.walletfx.OverlayableWindowController;
 import org.bitcoinj.walletfx.SendMoneyController;
-import org.bitcoinj.walletfx.WalletFxApp;
 import org.bitcoinj.walletfx.WalletMainWindowController;
 import org.bitcoinj.walletfx.WalletSettingsController;
 import org.bitcoinj.walletfx.controls.ClickableBitcoinAddress;
@@ -44,14 +40,12 @@ import org.bitcoinj.walletfx.utils.easing.ElasticInterpolator;
 
 import javax.inject.Singleton;
 
-import com.blockchaincommons.airgap.fx.camera.CameraService;
-import com.blockchaincommons.airgap.fx.components.CameraView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
- *
+ * Main window controller for Blockchain Commons Network Wallet
  */
 @Singleton
 public class AirgapFxMainWindowController extends WalletMainWindowController {
@@ -104,32 +98,11 @@ public class AirgapFxMainWindowController extends WalletMainWindowController {
     @FXML
     public void scanClicked(ActionEvent actionEvent) {
         log.info("scanClicked");
-        CameraService cameraService = app.cameraService;
+
+        QrCaptureView captureView  = new QrCaptureView(app.cameraService);
         //cameraService.addQRListener(this::resultListener);
-
-        Button startStop = new Button();
-        startStop.textProperty()
-                .bind(Bindings
-                        .when(cameraService.runningProperty())
-                        .then("Stop")
-                        .otherwise("Start"));
-
-        startStop.setOnAction(e -> {
-            if (cameraService.isRunning()) {
-                cameraService.cancel();
-            } else {
-                cameraService.restart();
-            }
-        });
-
-        CameraView view = new CameraView(cameraService);
-
-        BorderPane root = new BorderPane(view.getView());
-        BorderPane.setAlignment(startStop, Pos.CENTER);
-        BorderPane.setMargin(startStop, new Insets(5));
-        root.setBottom(startStop);
-
-        Scene scene = new Scene(root);
+        
+        Scene scene = new Scene(captureView);
         final Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();

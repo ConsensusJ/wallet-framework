@@ -1,21 +1,32 @@
+/*
+ * Copyright by the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.blockchaincommons.airgap.fx.demoapp;
 
 import com.blockchaincommons.airgap.fx.camera.CameraService;
-import com.blockchaincommons.airgap.fx.components.CameraView;
+import com.blockchaincommons.airgap.fx.components.QrCaptureView;
 import com.github.sarxos.webcam.Webcam;
 import javafx.application.Application;
-import javafx.beans.binding.Bindings;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Demonstration QR code scanner app with no bitcoinj/crypto dependencies
  */
 public class DemoQRScannerApplication extends Application {
     private static final Logger log = LoggerFactory.getLogger(DemoQRScannerApplication.class);
@@ -34,29 +45,9 @@ public class DemoQRScannerApplication extends Application {
 
         cameraService.addQRListener(this::resultListener);
 
-        Button startStop = new Button();
-        startStop.textProperty()
-                .bind(Bindings
-                        .when(cameraService.runningProperty())
-                        .then("Stop")
-                        .otherwise("Start"));
+        QrCaptureView captureView  = new QrCaptureView(cameraService);
 
-        startStop.setOnAction(e -> {
-            if (cameraService.isRunning()) {
-                cameraService.cancel();
-            } else {
-                cameraService.restart();
-            }
-        });
-
-        CameraView view = new CameraView(cameraService);
-
-        BorderPane root = new BorderPane(view);
-        BorderPane.setAlignment(startStop, Pos.CENTER);
-        BorderPane.setMargin(startStop, new Insets(5));
-        root.setBottom(startStop);
-
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(captureView);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
