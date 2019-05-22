@@ -48,18 +48,24 @@ public class AirgapFxWalletApp extends WalletFxApp {
     private static final String mainFxmlResName = "main.fxml";
     private static final String mainCssResName = "wallet.css";
 
+    public static final ImmutableList<ChildNumber>
+            BIP44_ACCOUNT_ZERO_PATH_TESTNET = ImmutableList.of(
+                    new ChildNumber(44, true),
+                    ChildNumber.ONE_HARDENED,   // coinType for TestNet
+                    ChildNumber.ZERO_HARDENED); // account zero
+
 
     // This may need to change to BIP
     private static KeyChainGroupStructure STRUCTURE_BIP44 = outputScriptType -> {
         if (outputScriptType != null && outputScriptType != Script.ScriptType.P2PKH) {
             if (outputScriptType == Script.ScriptType.P2WPKH) {
                 // TODO: I think this is incorrect
-                return BIP44_ACCOUNT_ZERO_PATH;
+                return BIP44_ACCOUNT_ZERO_PATH_TESTNET;
             } else {
                 throw new IllegalArgumentException(outputScriptType.toString());
             }
         } else {
-            return BIP44_ACCOUNT_ZERO_PATH;
+            return BIP44_ACCOUNT_ZERO_PATH_TESTNET;
         }
     };
 

@@ -1,7 +1,6 @@
 package com.blockchaincommons.airgap;
 
 import com.blockchaincommons.airgap.json.Derivation;
-import com.blockchaincommons.airgap.json.Derivation_;
 import com.blockchaincommons.airgap.json.Header;
 import com.blockchaincommons.airgap.json.Input;
 import com.blockchaincommons.airgap.json.Output;
@@ -15,6 +14,7 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
+import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.wallet.Wallet;
@@ -30,13 +30,14 @@ import java.util.UUID;
  */
 public class UnsignedTxQrGenerator {
     private static final Logger log = LoggerFactory.getLogger(UnsignedTxQrGenerator.class);
-    private static NetworkParameters netParams = TestNet3Params.get();
-    private final ObjectMapper mapper;
     private final Wallet wallet;
+    private final NetworkParameters netParams;
+    private final ObjectMapper mapper;
 
     public UnsignedTxQrGenerator(Wallet wallet) {
         this.wallet = wallet;
-        mapper = new ObjectMapper();
+        this.netParams = wallet.getParams();
+        this.mapper = new ObjectMapper();
     }
 
 
@@ -64,8 +65,7 @@ public class UnsignedTxQrGenerator {
         Address inputAddress = txInput.getConnectedOutput().getScriptPubKey().getToAddress(netParams);
         DeterministicKey key = (DeterministicKey) wallet.findKeyFromAddress(inputAddress);
         log.info("Input {} has path {}",txInput.getIndex(), key.getPathAsString());
-        Derivation derivation = new Derivation((long) key.getPath().get(0).num(),
-                (long) key.getPath().get(1).num());
+        Derivation derivation = derivationFromKey(key);
         return new Input(randomUid(),
                         txInput.getParentTransaction().getTxId().toString(),
                         (long) txInput.getIndex(),
@@ -74,8 +74,10 @@ public class UnsignedTxQrGenerator {
                         txInput.getValue().value);
     }
 
-    private static Output outputFromTxOutput(TransactionOutput txOutput) {
-        Derivation_ derivation = new Derivation_(0L, 0L);
+    private Output outputFromTxOutput(TransactionOutput txOutput) {
+        // Outputs aren't signed by the airgap wallet, so not sure why Derivation is used here,
+        // set to zeroes for now
+        Derivation derivation = new Derivation(0L, 0L, null);
         return new Output(randomUid(),
                 txOutput.getScriptPubKey().getToAddress(netParams).toString(),
                 txOutput.getValue().value,
@@ -103,5 +105,34 @@ public class UnsignedTxQrGenerator {
         return json;
     }
 
+    /**
+     * Generate a Derivation from a DeterministicKey
+     * The current Derivation structure assumes BIP44
+     * @param deterministicKey The key
+     * @return Derivation structure
+     */
+    private Derivation derivationFromKey(DeterministicKey deterministicKey) {
+        long expectedCoinType = netParams.getId().equals(NetworkParameters.ID_MAINNET) ? 0 : 1;
 
+        List<ChildNumber> path = deterministicKey.getPath();
+
+        long accountIndex = -1;
+        long addressIndex = -1;
+        Boolean change = null;
+        if (path.size() >= 5) {
+            long purpose  = (long) path.get(0).num();
+            long coinType = (long) path.get(1).num();
+            if ((purpose == 44L) && (coinType == expectedCoinType)) {
+                accountIndex = (long) path.get(2).num();
+                long changeIndex = (long) path.get(3).num();
+                addressIndex = (long) path.get(4).num();
+                change = (changeIndex == 1) ? true : null;
+            } else {
+                log.error("path {} is not BIP44-compatible and correct for current net params", deterministicKey.getPathAsString());
+            }
+        } else {
+            log.error("path {} is too short to be BIP44-compatible",deterministicKey.getPathAsString());
+        }
+        return new Derivation(accountIndex, addressIndex, change);
+    }
 }

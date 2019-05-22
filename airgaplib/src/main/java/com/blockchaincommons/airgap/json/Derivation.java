@@ -12,7 +12,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "accountIndex",
-        "addressIndex"
+        "addressIndex",
+        "isChange"
 })
 public class Derivation {
 
@@ -20,6 +21,9 @@ public class Derivation {
     private Long accountIndex;
     @JsonProperty("addressIndex")
     private Long addressIndex;
+    @JsonProperty("isChange")
+    private Boolean isChange;
+    
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -35,10 +39,11 @@ public class Derivation {
      * @param accountIndex
      * @param addressIndex
      */
-    public Derivation(Long accountIndex, Long addressIndex) {
+    public Derivation(Long accountIndex, Long addressIndex, Boolean isChange) {
         super();
         this.accountIndex = accountIndex;
         this.addressIndex = addressIndex;
+        this.isChange = isChange;
     }
 
     @JsonProperty("accountIndex")
@@ -59,6 +64,16 @@ public class Derivation {
     @JsonProperty("addressIndex")
     public void setAddressIndex(Long addressIndex) {
         this.addressIndex = addressIndex;
+    }
+
+    @JsonProperty("isChange")
+    public Boolean getIsChange() {
+        return isChange;
+    }
+
+    @JsonProperty("isChange")
+    public void setIsChange(Boolean isChange) {
+        this.isChange = isChange;
     }
 
     @JsonAnyGetter

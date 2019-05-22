@@ -25,7 +25,7 @@ public class Output {
     @JsonProperty("amount")
     private Long amount;
     @JsonProperty("derivation")
-    private Derivation_ derivation;
+    private Derivation derivation;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -43,7 +43,7 @@ public class Output {
      * @param derivation
      * @param receiver
      */
-    public Output(String uid, String receiver, Long amount, Derivation_ derivation) {
+    public Output(String uid, String receiver, Long amount, Derivation derivation) {
         super();
         this.uid = uid;
         this.receiver = receiver;
@@ -82,12 +82,12 @@ public class Output {
     }
 
     @JsonProperty("derivation")
-    public Derivation_ getDerivation() {
+    public Derivation getDerivation() {
         return derivation;
     }
 
     @JsonProperty("derivation")
-    public void setDerivation(Derivation_ derivation) {
+    public void setDerivation(Derivation derivation) {
         this.derivation = derivation;
     }
 
