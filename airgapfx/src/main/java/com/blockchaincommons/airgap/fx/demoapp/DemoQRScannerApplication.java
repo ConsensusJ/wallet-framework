@@ -51,7 +51,7 @@ public class DemoQRScannerApplication extends Application {
 
         CameraView view = new CameraView(cameraService);
 
-        BorderPane root = new BorderPane(view.getView());
+        BorderPane root = new BorderPane(view);
         BorderPane.setAlignment(startStop, Pos.CENTER);
         BorderPane.setMargin(startStop, new Insets(5));
         root.setBottom(startStop);
@@ -61,7 +61,7 @@ public class DemoQRScannerApplication extends Application {
         primaryStage.show();
     }
 
-    void resultListener(String result) {
+    private void resultListener(String result) {
         log.info("QR result: {}", result);
     }
 
