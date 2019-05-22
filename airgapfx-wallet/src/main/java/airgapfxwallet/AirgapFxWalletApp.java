@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.script.Script;
-import org.bitcoinj.wallet.DeterministicKeyChain;
 import org.bitcoinj.wallet.KeyChainGroupStructure;
 import org.bitcoinj.walletfx.WalletFxApp;
 import org.consensusj.supernautfx.FxmlLoaderFactory;
