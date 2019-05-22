@@ -43,7 +43,7 @@ public class AirGapSigner implements HardwareSigner {
 
     @Override
     public void displaySigningOverlay(Transaction tx, SendMoneyController sendMoneyController) {
-        String qrJson = qrJsonGenerator.txToSigningReqJson(tx);
+        String qrJson = qrJsonGenerator.createSigningRequestString(tx);
         Image qrImage = QRCodeImages.imageFromString(qrJson, 600, 450);
         ImageView view = new ImageView(qrImage);
         view.setEffect(new DropShadow());

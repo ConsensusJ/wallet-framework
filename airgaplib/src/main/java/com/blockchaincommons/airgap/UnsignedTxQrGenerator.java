@@ -1,3 +1,19 @@
+/*
+ * Copyright by the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.blockchaincommons.airgap;
 
 import com.blockchaincommons.airgap.json.Derivation;
@@ -16,7 +32,6 @@ import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.DeterministicKey;
-import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.wallet.Wallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,23 +40,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.blockchaincommons.airgap.AirGapProtocol.AssetType;
+
 /**
- *
+ * Generates TransactionSigningRequest from bitcoinj Transaction
  */
 public class UnsignedTxQrGenerator {
     private static final Logger log = LoggerFactory.getLogger(UnsignedTxQrGenerator.class);
     private final Wallet wallet;
     private final NetworkParameters netParams;
+    private final AirGapProtocol.AssetType assetType;
     private final ObjectMapper mapper;
 
     public UnsignedTxQrGenerator(Wallet wallet) {
         this.wallet = wallet;
         this.netParams = wallet.getParams();
         this.mapper = new ObjectMapper();
+        assetType = netParams.getId().equals(NetworkParameters.ID_MAINNET) ? AssetType.BTC : AssetType.BTCT;
     }
 
 
-    public TransactionSigningRequest of(Transaction transaction) {
+    public TransactionSigningRequest createSigningRequest(Transaction transaction) {
         TransactionSigningRequest txSignRequest;
         Header header = new Header("AirgappedSigning", 1L);
 
@@ -54,11 +73,16 @@ public class UnsignedTxQrGenerator {
             outputs.add(outputFromTxOutput(txOutput));
         });
 
-        UnsignedTransaction unsignedTx = new UnsignedTransaction(randomUid(), "BTC", inputs, outputs);
+        UnsignedTransaction unsignedTx = new UnsignedTransaction(randomUid(), assetType.toString(), inputs, outputs);
 
 
         txSignRequest = new TransactionSigningRequest(header, unsignedTx);
         return txSignRequest;
+    }
+
+    public String createSigningRequestString(Transaction tx) {
+        TransactionSigningRequest req = createSigningRequest(tx);
+        return toJson(req);
     }
 
     private Input inputFromTxInput(TransactionInput txInput) {
@@ -86,11 +110,6 @@ public class UnsignedTxQrGenerator {
 
     private static String randomUid() {
         return UUID.randomUUID().toString();
-    }
-
-    public String txToSigningReqJson(Transaction tx) {
-        TransactionSigningRequest req = of(tx);
-        return toJson(req);
     }
 
     public String toJson(TransactionSigningRequest txSignReq) {

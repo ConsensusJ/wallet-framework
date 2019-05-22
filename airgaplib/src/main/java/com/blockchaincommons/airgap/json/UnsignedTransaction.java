@@ -3,6 +3,8 @@ package com.blockchaincommons.airgap.json;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.blockchaincommons.airgap.AirGapProtocol;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
