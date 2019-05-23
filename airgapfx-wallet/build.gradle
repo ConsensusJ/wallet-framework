@@ -9,7 +9,7 @@ plugins {
 sourceCompatibility = 12
 targetCompatibility = 12
 
-version = '0.1.1'
+version = '0.1.2-SNAPSHOT'
 
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
@@ -45,7 +45,6 @@ dependencies {
     implementation ("com.github.sarxos:webcam-capture:0.3.12") {
         exclude group: 'com.nativelibs4java', module: 'bridj'
     }
-
 
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
     implementation "org.slf4j:slf4j-jdk14:${slf4jVersion}"
