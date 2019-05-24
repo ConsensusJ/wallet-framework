@@ -42,19 +42,17 @@ public class DemoQRScannerApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
-        cameraService.addQRListener(this::resultListener);
-
-        QrCaptureView captureView  = new QrCaptureView(cameraService);
+        QrCaptureView captureView  = new QrCaptureView(cameraService, this::scanListener);
 
         Scene scene = new Scene(captureView);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private void resultListener(String result) {
-        log.info("QR result: {}", result);
+    private void scanListener(String result) {
+        System.out.println("Result: " + result);
     }
+
 
     public static void main(String[] args) {
         launch(args);

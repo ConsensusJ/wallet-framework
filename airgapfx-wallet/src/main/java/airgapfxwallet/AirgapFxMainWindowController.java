@@ -99,9 +99,8 @@ public class AirgapFxMainWindowController extends WalletMainWindowController {
     public void scanClicked(ActionEvent actionEvent) {
         log.info("scanClicked");
 
-        QrCaptureView captureView  = new QrCaptureView(app.cameraService);
-        //cameraService.addQRListener(this::resultListener);
-        
+        QrCaptureView captureView  = new QrCaptureView(app.cameraService, this::scanListener);
+
         Scene scene = new Scene(captureView);
         final Stage stage = new Stage();
         stage.setScene(scene);
@@ -129,4 +128,9 @@ public class AirgapFxMainWindowController extends WalletMainWindowController {
         group.setCycleCount(1);
         group.play();
     }
+
+    private void scanListener(String result) {
+        log.info("QR Scan Result {}", result);
+    }
+
 }

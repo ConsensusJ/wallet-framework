@@ -30,6 +30,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,46 +43,56 @@ import java.util.function.Consumer;
  */
 public class CameraService extends Service<Image> {
     private static final Logger log = LoggerFactory.getLogger(CameraService.class);
+    private static final boolean logViewSizes = true;
 
     private final Webcam camera;
-    private final WebcamResolution resolution ;
+    private final WebcamResolution resolution;
+    private final WritableImage fxImage;
     private Consumer<String> listener = null;
 
     public CameraService(Webcam camera, WebcamResolution resolution) {
         this.camera = camera;
         this.resolution = resolution;
-        camera.setCustomViewSizes(resolution.getSize());
+        //camera.setCustomViewSizes(resolution.getSize());
         camera.setViewSize(resolution.getSize());
+        if (logViewSizes) {
+            log.info("Camera supports the following sizes:");
+            for (var size : camera.getViewSizes()) {
+                log.info(size.toString());
+            }
+        }
+
+        fxImage = new WritableImage(resolution.getWidth(), resolution.getHeight());
     }
 
     public CameraService(Webcam camera) {
-        this(camera, WebcamResolution.HVGA);
+        this(camera, WebcamResolution.VGA);
     }
 
     @Override
     public Task<Image> createTask() {
         return new Task<>() {
             @Override
-            protected Image call() throws Exception {
+            protected Image call() {
 
                 try {
                     camera.open();
                     while (!isCancelled()) {
                         if (camera.isImageNew()) {
                             BufferedImage bimg = camera.getImage();
-                            // TODO: Consider passing WritableImage for possible perf boost
-                            updateValue(SwingFXUtils.toFXImage(bimg, null));
+                            log.debug("BufferedImage: {}", bimg);
+                            log.debug("BufferedImage: {} x {}", bimg.getWidth(), bimg.getHeight());
+                            SwingFXUtils.toFXImage(bimg, fxImage);
+                            updateValue(fxImage);
                             Result result = scanForQR(bimg);
-                            if (result != null) {
-                                if (listener != null) {
-                                    Platform.runLater(() -> listener.accept(result.getText()));
-                                }
+                            if (result != null && listener != null) {
+                                Platform.runLater(() -> listener.accept(result.getText()));
                             }
                         }
                     }
                     log.info("Cancelled, closing camera");
                     camera.close();
-                    log.info("Camera closed");
+                    log.debug("Camera closed");
                     return getValue();
                 } finally {
                     camera.close();
@@ -90,8 +101,7 @@ public class CameraService extends Service<Image> {
 
         };
     }
-
-
+    
     public void addQRListener(Consumer<String> listener) {
         this.listener = listener;
     }
@@ -118,7 +128,5 @@ public class CameraService extends Service<Image> {
     public int getCameraHeight() {
         return resolution.getSize().height ;
     }
-
-
 
 }
