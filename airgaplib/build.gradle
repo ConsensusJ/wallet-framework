@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'groovy'
     id 'java-library'
     id 'maven'
     id 'eclipse'
@@ -19,4 +20,5 @@ dependencies {
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'com.msgilligan:bitcoinj-dsl:0.4.0'
 }

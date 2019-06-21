@@ -37,7 +37,7 @@ public class AirGapSigner implements HardwareSigner {
     private final OverlayableWindowController windowController;
 
     public AirGapSigner(Wallet wallet, OverlayableWindowController windowController) {
-        qrJsonGenerator = new UnsignedTxQrGenerator(wallet);
+        qrJsonGenerator = new UnsignedTxQrGenerator(wallet.getParams(), wallet.getActiveKeyChain());
         this.windowController = windowController;
     }
 

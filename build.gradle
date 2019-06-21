@@ -32,10 +32,12 @@ allprojects {
     repositories {
         jcenter()
         maven { url 'https://jitpack.io' }
+        maven { url 'https://dl.bintray.com/msgilligan/maven' } // ConsensusJ (bitcoinj DSL)
     }
 }
 
 subprojects {
+    apply plugin: 'groovy'
     /*
      * Supernaut will target recent JDK versions. For now library modules will
      * target JDK 11 and sample apps will use JDK 12. We intend to migrate to

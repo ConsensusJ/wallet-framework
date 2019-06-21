@@ -32,7 +32,8 @@ import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.DeterministicKey;
-import org.bitcoinj.wallet.Wallet;
+import org.bitcoinj.script.Script;
+import org.bitcoinj.wallet.DeterministicKeyChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,14 +48,14 @@ import static com.blockchaincommons.airgap.AirGapProtocol.AssetType;
  */
 public class UnsignedTxQrGenerator {
     private static final Logger log = LoggerFactory.getLogger(UnsignedTxQrGenerator.class);
-    private final Wallet wallet;
+    private final DeterministicKeyChain keyChain;
     private final NetworkParameters netParams;
     private final AirGapProtocol.AssetType assetType;
     private final ObjectMapper mapper;
 
-    public UnsignedTxQrGenerator(Wallet wallet) {
-        this.wallet = wallet;
-        this.netParams = wallet.getParams();
+    public UnsignedTxQrGenerator(NetworkParameters netParams, DeterministicKeyChain keyChain) {
+        this.keyChain = keyChain;
+        this.netParams = netParams;
         this.mapper = new ObjectMapper();
         assetType = netParams.getId().equals(NetworkParameters.ID_MAINNET) ? AssetType.BTC : AssetType.BTCT;
     }
@@ -86,8 +87,10 @@ public class UnsignedTxQrGenerator {
     }
 
     private Input inputFromTxInput(TransactionInput txInput) {
-        Address inputAddress = txInput.getConnectedOutput().getScriptPubKey().getToAddress(netParams);
-        DeterministicKey key = (DeterministicKey) wallet.findKeyFromAddress(inputAddress);
+        Script scriptPubKey = txInput.getConnectedOutput().getScriptPubKey();
+        Address inputAddress = scriptPubKey.getToAddress(netParams);
+        byte[] pubKeyHash = scriptPubKey.getPubKeyHash();
+        DeterministicKey key = keyChain.findKeyFromPubHash(pubKeyHash);
         log.info("Input {} has path {}",txInput.getIndex(), key.getPathAsString());
         Derivation derivation = derivationFromKey(key);
         return new Input(randomUid(),
@@ -100,7 +103,7 @@ public class UnsignedTxQrGenerator {
 
     private Output outputFromTxOutput(TransactionOutput txOutput) {
         // Outputs aren't signed by the airgap wallet, so not sure why Derivation is used here,
-        // set to zeroes for now
+        // set to zeros for now
         Derivation derivation = new Derivation(0L, 0L, null);
         return new Output(randomUid(),
                 txOutput.getScriptPubKey().getToAddress(netParams).toString(),
