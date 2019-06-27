@@ -19,6 +19,7 @@ package omnijwallet;
 import com.google.common.collect.ImmutableList;
 import javafx.stage.Stage;
 import org.bitcoinj.crypto.ChildNumber;
+import org.bitcoinj.crypto.HDPath;
 import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.wallet.KeyChainGroupStructure;
@@ -42,12 +43,11 @@ public class OmniJWalletApp extends WalletFxApp {
     private static final String mainFxmlResName = "main.fxml";
     private static final String mainCssResName = "wallet.css";
     
-    public static final ImmutableList<ChildNumber>
-            BIP44_ACCOUNT_ZERO_PATH_TESTNET = ImmutableList.of(
-                    new ChildNumber(44, true),
-                    ChildNumber.ONE_HARDENED,   // coinType for TestNet
-                    ChildNumber.ZERO_HARDENED); // account zero
-
+    private static final HDPath
+            BIP44_ACCOUNT_ZERO_PATH_TESTNET = HDPath
+                .of(new ChildNumber(44, true))
+                .extend(ChildNumber.ONE_HARDENED)    // coinType for TestNet
+                .extend(ChildNumber.ZERO_HARDENED);// account zero
 
     // This may need to change to BIP
     private static KeyChainGroupStructure STRUCTURE_BIP44 = outputScriptType -> {

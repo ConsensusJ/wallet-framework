@@ -1,7 +1,7 @@
 package com.blockchaincommons.airgap;
 
-import com.google.common.collect.ImmutableList;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.crypto.HDPath;
 import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.wallet.KeyChainGroupStructure;
@@ -25,8 +25,8 @@ public class BipStandardKeyChainGroupStructure implements KeyChainGroupStructure
     public static ChildNumber CHANGE_RECEIVING = new ChildNumber(0, false);
     public static ChildNumber CHANGE_CHANGE = new ChildNumber(1, false);
 
-    private static final HDPath BIP44_PARENT = HDPath.of(true, Collections.singletonList(PURPOSE_BIP44));
-    private static final HDPath BIP84_PARENT = HDPath.of(true, Collections.singletonList(PURPOSE_BIP84));
+    private static final HDPath BIP44_PARENT = new HDPath(true, Collections.singletonList(PURPOSE_BIP44));
+    private static final HDPath BIP84_PARENT = new HDPath(true, Collections.singletonList(PURPOSE_BIP84));
 
     public BipStandardKeyChainGroupStructure(NetworkParameters networkParameters) {
         if (networkParameters.getId().equals(NetworkParameters.ID_MAINNET)) {
@@ -37,8 +37,8 @@ public class BipStandardKeyChainGroupStructure implements KeyChainGroupStructure
     }
 
     @Override
-    public ImmutableList<ChildNumber> accountPathFor(Script.ScriptType outputScriptType) {
-        return ImmutableList.copyOf(accountHDPathFor(outputScriptType, 0));
+    public HDPath accountPathFor(Script.ScriptType outputScriptType) {
+        return accountHDPathFor(outputScriptType, 0);
     }
     
     public HDPath accountHDPathFor(Script.ScriptType outputScriptType, int accountIndex) {
