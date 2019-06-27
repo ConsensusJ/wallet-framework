@@ -93,12 +93,13 @@ public class UnsignedTxQrGenerator {
         DeterministicKey key = keyChain.findKeyFromPubHash(pubKeyHash);
         log.info("Input {} has path {}",txInput.getIndex(), key.getPathAsString());
         Derivation derivation = derivationFromKey(key);
+        long value = (txInput.getValue() != null) ? txInput.getValue().value : 0;
         return new Input(randomUid(),
-                        txInput.getParentTransaction().getTxId().toString(),
+                        txInput.getOutpoint().getHash().toString(),
                         (long) txInput.getIndex(),
                         inputAddress.toString(),
                         derivation,
-                        txInput.getValue().value);
+                        value);
     }
 
     private Output outputFromTxOutput(TransactionOutput txOutput) {

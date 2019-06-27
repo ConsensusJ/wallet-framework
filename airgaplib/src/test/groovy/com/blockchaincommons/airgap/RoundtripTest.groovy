@@ -18,7 +18,7 @@ import spock.lang.Specification
 /**
  *
  */
-class RoundtripTest extends Specification {
+class RoundtripTest extends DeterministicKeychainBaseSpec {
     static final netParams = TestNet3Params.get()
     // Panda Diary Testnet wallet, first BIP44 receiving address
     static final Address fromAddr = Address.fromString(netParams, "muuZ2RXkePUsx9Y6cWt3TCSbQyetD6nKak")
@@ -57,7 +57,7 @@ class RoundtripTest extends Specification {
 
         when: "we use Wolf's provided signature to sign it"
         def input = tx.getInput(0)
-        input.setScriptSig(ScriptBuilder.createInputScript(airgapSig, fromKey))
+        input.setScriptSig(ScriptBuilder.createInputScript(airgapSig1, fromKey))
         input.setWitness(null)
 
         then: "it verifies"
@@ -79,7 +79,7 @@ class RoundtripTest extends Specification {
         when: "we use a signature from bitcoinj to sign it"
         def bitcoinjSig = signWithKey(tx, fromKey)
         def input = tx.getInput(0)
-        input.setScriptSig(ScriptBuilder.createInputScript(airgapSig, fromKey))
+        input.setScriptSig(ScriptBuilder.createInputScript(airgapSig1, fromKey))
         input.setWitness(null)
 
         then:
