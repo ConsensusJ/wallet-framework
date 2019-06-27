@@ -3,4 +3,5 @@ include 'supernautfx-hello'
 include 'airgaplib'
 include 'airgapfx'
 include 'airgapfx-wallet'
+include 'omnij-wallet'
 
