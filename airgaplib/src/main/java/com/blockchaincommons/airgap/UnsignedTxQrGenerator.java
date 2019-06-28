@@ -112,7 +112,7 @@ public class UnsignedTxQrGenerator {
                 derivation);
     }
 
-    private static String randomUid() {
+    public static String randomUid() {
         return UUID.randomUUID().toString();
     }
 

@@ -12,4 +12,5 @@ module com.blockchaincommons.airgap {
 
     exports com.blockchaincommons.airgap;
     exports com.blockchaincommons.airgap.json;
+    exports com.blockchaincommons.airgap.keychain;
 }
