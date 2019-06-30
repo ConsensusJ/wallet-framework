@@ -1,12 +1,8 @@
 package com.blockchaincommons.airgap
 
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.Coin
-import org.bitcoinj.core.ECKey
-import org.bitcoinj.core.LegacyAddress
+
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.core.TransactionInput
-import org.bitcoinj.core.TransactionOutput
 import org.bitcoinj.crypto.TransactionSignature
 import org.bitcoinj.script.ScriptBuilder
 import org.bitcoinj.script.ScriptChunk
@@ -24,7 +20,7 @@ class KeychainRoundtripTest extends DeterministicKeychainBaseSpec {
 
     def "Roundtrip using Key Chain and LocalTransactionSigner works (spent funding utxo)"() {
         given: "an unsigned 1-input, 2-output transaction"
-        def fromAddr = keyChain.receivingAddr(0)
+        def fromAddr = signingKeychain.receivingAddr(0)
         def tx = originalFundingTransaction()
         
         when: "We sign it locally"
@@ -54,10 +50,10 @@ class KeychainRoundtripTest extends DeterministicKeychainBaseSpec {
         def utxo_tx = firstChangeTransaction()
         println "change (utxo) tx: ${utxo_tx}"
         def utxo = utxo_tx.getOutput(1)
-        def fromKey = keyChain.changeKey(0)
-        def fromAddr = keyChain.changeAddr(0)
-        def toAddr = keyChain.receivingAddr(1)
-        def changeAddr = keyChain.changeAddr(1)
+        def fromKey = signingKeychain.changeKey(0)
+        def fromAddr = signingKeychain.changeAddr(0)
+        def toAddr = signingKeychain.receivingAddr(1)
+        def changeAddr = signingKeychain.changeAddr(1)
         def txAmount = 0.01.btc
         def changeAmount = 0.20990147.btc
 
@@ -118,8 +114,8 @@ class KeychainRoundtripTest extends DeterministicKeychainBaseSpec {
     @Ignore
     def "Roundtrip using externally provided signature works (attempt 1)"() {
         given: "an unsigned 1-input, 2-output transaction"
-        def fromKey = keyChain.receivingKey(0)
-        def fromAddr = keyChain.receivingAddr(0)
+        def fromKey = signingKeychain.receivingKey(0)
+        def fromAddr = signingKeychain.receivingAddr(0)
         def tx = originalFundingTransaction()
 
         and: "an externally provided signature"
@@ -150,8 +146,8 @@ class KeychainRoundtripTest extends DeterministicKeychainBaseSpec {
     @Ignore
     def "Roundtrip using externally provided signature works (attempt 2)"() {
         given: "an unsigned 1-input, 2-output transaction"
-        def fromKey = keyChain.changeKey(0)
-        def fromAddr = keyChain.changeAddr(0)
+        def fromKey = signingKeychain.changeKey(0)
+        def fromAddr = signingKeychain.changeAddr(0)
         def tx = firstChangeTransaction()
 
         and: "an externally provided signature"
@@ -180,6 +176,6 @@ class KeychainRoundtripTest extends DeterministicKeychainBaseSpec {
     }
 
     def setupSpec() {
-        qrGenerator = new UnsignedTxQrGenerator(netParams, keyChain)
+        qrGenerator = new UnsignedTxQrGenerator(netParams, signingKeychain)
     }
 }

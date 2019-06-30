@@ -32,20 +32,20 @@ abstract class DeterministicKeychainBaseSpec extends Specification {
     protected static final NetworkParameters netParams = TestNet3Params.get()
     
     @Shared
-    BipStandardDeterministicKeyChain keyChain
+    BipStandardDeterministicKeyChain signingKeychain
 
     @Shared
     KeyChainGroup keyChainGroup
 
     def setupSpec() {
         DeterministicSeed seed =  new DeterministicSeed(mnemonicString, null, "", creationInstant.getEpochSecond());
-        keyChain = new BipStandardDeterministicKeyChain(seed, Script.ScriptType.P2PKH, 0);
+        signingKeychain = new BipStandardDeterministicKeyChain(seed, Script.ScriptType.P2PKH, 0);
         // We need to create some leaf keys in the HD keychain so that they can be found for verifying transactions
-        keyChain.getKeys(KeyChain.KeyPurpose.RECEIVE_FUNDS, 2)  // Generate first 2 receiving address
-        keyChain.getKeys(KeyChain.KeyPurpose.CHANGE, 2)         // Generate first 2 change address
+        signingKeychain.getKeys(KeyChain.KeyPurpose.RECEIVE_FUNDS, 2)  // Generate first 2 receiving address
+        signingKeychain.getKeys(KeyChain.KeyPurpose.CHANGE, 2)         // Generate first 2 change address
         keyChainGroup = KeyChainGroup
                 .builder(netParams)
-                .addChain(keyChain)
+                .addChain(signingKeychain)
                 .build()
     }
 
@@ -98,12 +98,12 @@ abstract class DeterministicKeychainBaseSpec extends Specification {
     }
 
     protected Transaction originalFundingTransaction() {
-        ECKey fromKey = keyChain.receivingKey(0)
+        ECKey fromKey = signingKeychain.receivingKey(0)
         TransactionOutput utxo = RoundtripTest.initial_tx.getOutput(0)
-        LegacyAddress toAddr = keyChain.receivingAddr(1)
+        LegacyAddress toAddr = signingKeychain.receivingAddr(1)
         Coin toAmount = 0.01.btc
         Coin changeAmount = RoundtripTest.changeAmount
-        LegacyAddress changeAddr = keyChain.changeAddr(0)
+        LegacyAddress changeAddr = signingKeychain.changeAddr(0)
         def tx = buildTestTransaction(fromKey, utxo, toAddr, changeAddr, toAmount, changeAmount)
         return tx
     }

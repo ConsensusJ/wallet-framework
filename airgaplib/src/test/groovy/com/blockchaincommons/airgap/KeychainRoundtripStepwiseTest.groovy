@@ -35,14 +35,14 @@ class KeychainRoundtripStepwiseTest extends DeterministicKeychainBaseSpec  {
         given: "a transaction with a UTXO in output 1"
         // This is actually the first transaction received by the
         // 0'th change address in our "panda diary" keychain.
-        fromKey = keyChain.changeKey(0)
-        fromAddr = keyChain.changeAddr(0)
+        fromKey = signingKeychain.changeKey(0)
+        fromAddr = signingKeychain.changeAddr(0)
         Transaction utxo_tx = firstChangeTransaction()
         TransactionOutput utxo = utxo_tx.getOutput(1)
 
         when: "we build a 1-input, 2-output (unsigned) transaction to spend the UTXO"
-        LegacyAddress toAddr = keyChain.receivingAddr(1)
-        LegacyAddress changeAddr = keyChain.changeAddr(1)
+        LegacyAddress toAddr = signingKeychain.receivingAddr(1)
+        LegacyAddress changeAddr = signingKeychain.changeAddr(1)
         Coin txAmount = 0.01.btc
         Coin changeAmount = 0.20990147.btc
         transaction = buildTestTransaction(fromKey, utxo, toAddr, changeAddr, txAmount, changeAmount)
@@ -60,7 +60,7 @@ class KeychainRoundtripStepwiseTest extends DeterministicKeychainBaseSpec  {
     def "AIRGAP wallet can use the signing request JSON to generate a signed response"() {
         given: "An Airgap transaction signer object "
         // (same basic functionality as an airgap device/wallet)
-        AirGapTransactionSigner signer = new AirGapTransactionSigner(keyChain)
+        AirGapTransactionSigner signer = new AirGapTransactionSigner(signingKeychain)
 
         when: "we parse the signing request JSON and create the transaction signature response JSON"
         TransactionSigningRequest request = signer.parseSigningRequestJson(signingRequestJsonString)
@@ -112,6 +112,6 @@ class KeychainRoundtripStepwiseTest extends DeterministicKeychainBaseSpec  {
     }
 
     def setupSpec() {
-        qrGenerator = new UnsignedTxQrGenerator(netParams, keyChain)
+        qrGenerator = new UnsignedTxQrGenerator(netParams, signingKeychain)
     }
 }
