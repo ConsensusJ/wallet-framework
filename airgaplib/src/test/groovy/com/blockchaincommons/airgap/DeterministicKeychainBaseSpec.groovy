@@ -9,6 +9,8 @@ import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.core.TransactionOutPoint
 import org.bitcoinj.core.TransactionOutput
+import org.bitcoinj.crypto.DeterministicKey
+import org.bitcoinj.crypto.HDPath
 import org.bitcoinj.params.TestNet3Params
 import org.bitcoinj.script.Script
 import org.bitcoinj.script.ScriptBuilder
@@ -27,8 +29,12 @@ import java.time.ZoneOffset
  * Base Specification for testing with a DeterministicKeyChain
  */
 abstract class DeterministicKeychainBaseSpec extends Specification {
-    public static final String mnemonicString = "panda diary marriage suffer basic glare surge auto scissors describe sell unique";
-    public static final Instant creationInstant = LocalDate.of(2019, 4, 10).atStartOfDay().toInstant(ZoneOffset.UTC);
+    public static final String mnemonicString = "panda diary marriage suffer basic glare surge auto scissors describe sell unique"
+    public static final Instant creationInstant = LocalDate.of(2019, 4, 10).atStartOfDay().toInstant(ZoneOffset.UTC)
+    public static final BipStandardKeyChainGroupStructure bip44KeyChainGroupStructure = new BipStandardKeyChainGroupStructure(TestNet3Params.get())
+    public static final int signingAccountIndex = 0
+    public static final Script.ScriptType outputScriptType = Script.ScriptType.P2PKH
+    public static final HDPath signingAccountPath = bip44KeyChainGroupStructure.accountHDPathFor(outputScriptType, signingAccountIndex)
     protected static final NetworkParameters netParams = TestNet3Params.get()
     
     @Shared
@@ -38,8 +44,8 @@ abstract class DeterministicKeychainBaseSpec extends Specification {
     KeyChainGroup keyChainGroup
 
     def setupSpec() {
-        DeterministicSeed seed =  new DeterministicSeed(mnemonicString, null, "", creationInstant.getEpochSecond());
-        signingKeychain = new BipStandardDeterministicKeyChain(seed, Script.ScriptType.P2PKH, 0);
+        DeterministicSeed seed =  new DeterministicSeed(mnemonicString, null, "", creationInstant.getEpochSecond())
+        signingKeychain = new BipStandardDeterministicKeyChain(seed, outputScriptType, signingAccountIndex);
         // We need to create some leaf keys in the HD keychain so that they can be found for verifying transactions
         signingKeychain.getKeys(KeyChain.KeyPurpose.RECEIVE_FUNDS, 2)  // Generate first 2 receiving address
         signingKeychain.getKeys(KeyChain.KeyPurpose.CHANGE, 2)         // Generate first 2 change address
@@ -122,5 +128,9 @@ abstract class DeterministicKeychainBaseSpec extends Specification {
     
     protected Transaction firstChangeTransaction() {
         return RoundtripTest.change_tx
+    }
+
+    static LegacyAddress addressFromKey(DeterministicKey key) {
+        return LegacyAddress.fromKey(netParams, key);
     }
 }

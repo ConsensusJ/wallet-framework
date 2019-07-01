@@ -7,9 +7,14 @@ import org.bitcoinj.core.LegacyAddress
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.core.TransactionInput
 import org.bitcoinj.core.TransactionOutput
+import org.bitcoinj.crypto.ChildNumber
 import org.bitcoinj.crypto.DeterministicKey
+import org.bitcoinj.crypto.HDPath
 import org.bitcoinj.crypto.TransactionSignature
+import org.bitcoinj.script.Script
 import org.bitcoinj.script.ScriptBuilder
+import org.bitcoinj.wallet.DeterministicKeyChain
+import org.bitcoinj.wallet.KeyChain
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -22,8 +27,16 @@ import spock.lang.Stepwise
  */
 @Stepwise
 class KeychainRoundtripStepwiseTest extends DeterministicKeychainBaseSpec  {
+    // Account path for the network wallet
+    static final HDPath networkAccountPath = HDPath.of(ChildNumber.ZERO_HARDENED)
+    // Relative paths to keys used in tests
+    static final HDPath fromKeyPath = HDPath.of(ChildNumber.ONE, ChildNumber.ZERO)
+    static final HDPath toKeyPath = HDPath.of(ChildNumber.ZERO, ChildNumber.ONE)
+    static final HDPath changeKeyPath = HDPath.of(ChildNumber.ONE, ChildNumber.ONE)
 
     @Shared UnsignedTxQrGenerator qrGenerator
+    @Shared String xpub
+    @Shared DeterministicKeyChain networkKeyChain
     @Shared String signingRequestJsonString
     @Shared String signedResponseJsonString
     @Shared TransactionSignatureResponse response
@@ -31,18 +44,49 @@ class KeychainRoundtripStepwiseTest extends DeterministicKeychainBaseSpec  {
     @Shared DeterministicKey fromKey
     @Shared LegacyAddress fromAddr
 
-    def "NETWORK wallet can create a transaction and serialize to signing request JSON"() {
+    def "Can create an xpub string from signing keychain"() {
+        when:
+        def watchingKey = signingKeychain.getWatchingKey()
+        println "watching key path = ${watchingKey.pathAsString}"
+        xpub = watchingKey.serializePubB58(netParams,  Script.ScriptType.P2PKH)
+        println "xpub = ${xpub}"
+
+        then:
+        xpub.length() > 0
+    }
+
+    def "Can create a network keychain from the xpub"() {
+        when: "we create a network keychain from the xpub"
+        DeterministicKey key = DeterministicKey.deserializeB58(xpub, netParams)
+        // The below will create a wallet, but we're not using Wallets in this test spec
+        //Wallet networkWallet = Wallet.fromWatchingKey(netParams, key, Script.ScriptType.P2PKH)
+        networkKeyChain = DeterministicKeyChain.builder().watch(key).outputScriptType(outputScriptType).build()
+
+        and: "we fetch the keys that are used in later steps"
+        DeterministicKey fromKey = networkKeyChain.getKeyByPath(HDPath.of(networkAccountPath).extend(fromKeyPath), true)
+        DeterministicKey toKey = networkKeyChain.getKeyByPath(HDPath.of(networkAccountPath).extend(toKeyPath), true)
+        DeterministicKey changeKey = networkKeyChain.getKeyByPath(HDPath.of(networkAccountPath).extend(changeKeyPath), true)
+
+        then: "the pubkeys in the network keychain match the pubkeys in the signing keychain"
+        networkKeyChain != null
+        networkKeyChain.isWatching()
+        fromKey.getPubKey() == signingKeychain.getKeyByPath(HDPath.of(signingAccountPath).extend(fromKeyPath), false).getPubKey()
+        toKey.getPubKey() == signingKeychain.getKeyByPath(HDPath.of(signingAccountPath).extend(toKeyPath), false).getPubKey()
+        changeKey.getPubKey() == signingKeychain.getKeyByPath(HDPath.of(signingAccountPath).extend(changeKeyPath), false).getPubKey()
+    }
+
+    def "NETWORK wallet can create a transaction and serialize a JSON signing request "() {
         given: "a transaction with a UTXO in output 1"
         // This is actually the first transaction received by the
         // 0'th change address in our "panda diary" keychain.
-        fromKey = signingKeychain.changeKey(0)
-        fromAddr = signingKeychain.changeAddr(0)
+        fromKey = networkKeyChain.getKeyByPath(HDPath.of(networkAccountPath).extend(fromKeyPath), false)
+        fromAddr = addressFromKey(fromKey)
         Transaction utxo_tx = firstChangeTransaction()
         TransactionOutput utxo = utxo_tx.getOutput(1)
 
         when: "we build a 1-input, 2-output (unsigned) transaction to spend the UTXO"
-        LegacyAddress toAddr = signingKeychain.receivingAddr(1)
-        LegacyAddress changeAddr = signingKeychain.changeAddr(1)
+        LegacyAddress toAddr = addressFromKey(networkKeyChain.getKeyByPath(HDPath.of(networkAccountPath).extend(toKeyPath), false))
+        LegacyAddress changeAddr = addressFromKey(networkKeyChain.getKeyByPath(HDPath.of(networkAccountPath).extend(changeKeyPath), false))
         Coin txAmount = 0.01.btc
         Coin changeAmount = 0.20990147.btc
         transaction = buildTestTransaction(fromKey, utxo, toAddr, changeAddr, txAmount, changeAmount)
