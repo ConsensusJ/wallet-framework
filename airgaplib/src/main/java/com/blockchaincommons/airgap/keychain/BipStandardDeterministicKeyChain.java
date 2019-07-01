@@ -36,7 +36,7 @@ public class BipStandardDeterministicKeyChain extends DeterministicKeyChain {
      * @param accountIndex account index to use for the account child
      */
     public BipStandardDeterministicKeyChain(DeterministicSeed seed, Script.ScriptType outputScriptType, int accountIndex) {
-        super(seed, null, outputScriptType, ImmutableList.copyOf(bip44KeyChainGroupStructure.accountHDPathFor(outputScriptType, accountIndex)));
+        super(seed, null, outputScriptType, bip44KeyChainGroupStructure.accountHDPathFor(outputScriptType, accountIndex));
         pathAccount = bip44KeyChainGroupStructure.accountHDPathFor(outputScriptType, accountIndex);
         pathReceiving = pathAccount.extend(BipStandardKeyChainGroupStructure.CHANGE_RECEIVING);
         pathChange = pathAccount.extend(BipStandardKeyChainGroupStructure.CHANGE_CHANGE);
