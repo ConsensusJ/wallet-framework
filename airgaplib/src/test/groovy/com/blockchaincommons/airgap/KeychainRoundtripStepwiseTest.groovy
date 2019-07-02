@@ -14,9 +14,10 @@ import org.bitcoinj.crypto.TransactionSignature
 import org.bitcoinj.script.Script
 import org.bitcoinj.script.ScriptBuilder
 import org.bitcoinj.wallet.DeterministicKeyChain
-import org.bitcoinj.wallet.KeyChain
 import spock.lang.Shared
 import spock.lang.Stepwise
+
+import java.time.Instant
 
 /**
  * Spock Test Specification for the roundtrip process of signing a Bitcoin Testnet transaction.
@@ -36,6 +37,7 @@ class KeychainRoundtripStepwiseTest extends DeterministicKeychainBaseSpec  {
 
     @Shared UnsignedTxQrGenerator qrGenerator
     @Shared String xpub
+    @Shared Instant xpubCreationInstant
     @Shared DeterministicKeyChain networkKeyChain
     @Shared String signingRequestJsonString
     @Shared String signedResponseJsonString
@@ -45,19 +47,29 @@ class KeychainRoundtripStepwiseTest extends DeterministicKeychainBaseSpec  {
     @Shared LegacyAddress fromAddr
 
     def "Can create an xpub string from signing keychain"() {
+        expect: "Test setup provides a DeterministicKeyChain initialized with the Panda Diary seed"
+        signingKeychain != null
+
         when:
         def watchingKey = signingKeychain.getWatchingKey()
+        println "watching key = ${watchingKey}"
         println "watching key path = ${watchingKey.pathAsString}"
         xpub = watchingKey.serializePubB58(netParams,  Script.ScriptType.P2PKH)
+        xpubCreationInstant = Instant.ofEpochSecond(watchingKey.creationTimeSeconds)
         println "xpub = ${xpub}"
+        println "xpub creation time = ${xpubCreationInstant}"
 
         then:
         xpub.length() > 0
+        xpub == "tpubDDpSwdfCsfnYP8SH7YZvu1LK3BUMr3RQruCKTkKdtnHy2iBNJWn1CYvLwgskZxVNBV4KhicZ4FfgFCGjTwo4ATqdwoQcb5UjJ6ejaey5Ff8"
     }
 
     def "Can create a network keychain from the xpub"() {
         when: "we create a network keychain from the xpub"
         DeterministicKey key = DeterministicKey.deserializeB58(xpub, netParams)
+        key.creationTimeSeconds = xpubCreationInstant.epochSecond
+        println "Deserialized xpub key: ${key}"
+        println "Deserialized xpub creation time: ${Instant.ofEpochSecond(key.creationTimeSeconds)}"
         // The below will create a wallet, but we're not using Wallets in this test spec
         //Wallet networkWallet = Wallet.fromWatchingKey(netParams, key, Script.ScriptType.P2PKH)
         networkKeyChain = DeterministicKeyChain.builder().watch(key).outputScriptType(outputScriptType).build()
