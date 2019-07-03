@@ -90,8 +90,8 @@ public class AirGapTransactionSigner {
         jsonTx.setAsset(asset);
 
         List<InputSignature> signatureList = new ArrayList<>();
-        for (Input input : request.getTransaction().getInputs())  {
-            signatureList.add(buildSignature(tx, input));
+        for (TransactionInput input : tx.getInputs())  {
+            signatureList.add(buildSignature(input));
         }
         jsonTx.setInputSignatures(signatureList);
         response.setTransaction(jsonTx);
@@ -101,12 +101,10 @@ public class AirGapTransactionSigner {
     /**
      * Create an {@code InputSignature} for transaction input
      *
-     * @param tx Correctly signed bitcoinj transaction
-     * @param input  Airgap Input POJO
+     * @param txInput An input from a correctly signed bitcoinj transaction
      * @return Airgap input signature POJO
      */
-    private InputSignature buildSignature(Transaction tx, Input input)  {
-        TransactionInput txInput = tx.getInput(input.getInputIndex());
+    private InputSignature buildSignature(TransactionInput txInput)  {
         byte[] sigData = txInput.getScriptSig().getChunks().get(0).data;
         byte[] pubKeyData = txInput.getScriptSig().getChunks().get(1).data;
         String ecSigBase64 = Base64.getEncoder().encodeToString(sigData);
@@ -138,9 +136,9 @@ public class AirGapTransactionSigner {
 
         // For each input in the signing request, add a signed input to the bitcoinj transaction
         for (Input input : request.getTransaction().getInputs()) {
-            TransactionOutPoint outPoint = new TransactionOutPoint(netParams,   // TESTNET
-                    1,  // TODO: UTXO output transaction index should not be hard-coded
-                     Sha256Hash.wrap(input.getTxHash()));
+            TransactionOutPoint outPoint = new TransactionOutPoint(netParams,
+                        input.getIndex(),
+                        Sha256Hash.wrap(input.getTxHash()));
             Address fromAddr = LegacyAddress.fromBase58(netParams, input.getSender());
             DeterministicKey fromKey = keyChain.findKeyFromPubHash(fromAddr.getHash());
             tx.addSignedInput(outPoint, ScriptBuilder.createOutputScript(fromAddr), fromKey);

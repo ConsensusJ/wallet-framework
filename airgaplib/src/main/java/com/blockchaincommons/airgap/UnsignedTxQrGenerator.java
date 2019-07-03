@@ -96,7 +96,7 @@ public class UnsignedTxQrGenerator {
         long value = (txInput.getValue() != null) ? txInput.getValue().value : 0;
         return new Input(randomUid(),
                         txInput.getOutpoint().getHash().toString(),
-                        (long) txInput.getIndex(),
+                        txInput.getOutpoint().getIndex(),
                         inputAddress.toString(),
                         derivation,
                         value);

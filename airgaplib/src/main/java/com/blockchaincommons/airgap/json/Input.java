@@ -24,8 +24,8 @@ public class Input {
     private String uid;
     @JsonProperty("txHash")
     private String txHash;
-    @JsonProperty("inputIndex")
-    private Long inputIndex;
+    @JsonProperty("index")
+    private Long index;
     @JsonProperty("sender")
     private String sender;
     @JsonProperty("derivation")
@@ -48,14 +48,14 @@ public class Input {
      * @param sender
      * @param uid
      * @param derivation
-     * @param inputIndex
+     * @param index
      * @param txHash
      */
-    public Input(String uid, String txHash, Long inputIndex, String sender, Derivation derivation, Long amount) {
+    public Input(String uid, String txHash, Long index, String sender, Derivation derivation, Long amount) {
         super();
         this.uid = uid;
         this.txHash = txHash;
-        this.inputIndex = inputIndex;
+        this.index = index;
         this.sender = sender;
         this.derivation = derivation;
         this.amount = amount;
@@ -81,14 +81,14 @@ public class Input {
         this.txHash = txHash;
     }
 
-    @JsonProperty("inputIndex")
-    public Long getInputIndex() {
-        return inputIndex;
+    @JsonProperty("index")
+    public Long getIndex() {
+        return index;
     }
 
-    @JsonProperty("inputIndex")
-    public void setInputIndex(Long inputIndex) {
-        this.inputIndex = inputIndex;
+    @JsonProperty("index")
+    public void setIndex(Long index) {
+        this.index = index;
     }
 
     @JsonProperty("sender")
