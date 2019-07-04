@@ -9,6 +9,13 @@ plugins {
 
 def jacksonVersion = '2.9.8'
 
+/*
+ * TODO: This module should really be JDK 8 compatible, perhaps a multi-release jar
+ * Currently the only feature we're using that requires 9 is the module header
+ */
+sourceCompatibility = 9
+targetCompatibility = 9
+
 dependencies {
     api "${bitcoinjGroup}:${bitcoinjArtifact}:${bitcoinjVersion}"
 
