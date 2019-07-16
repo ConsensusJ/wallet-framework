@@ -16,7 +16,10 @@
 
 package airgapfxwallet;
 
+import com.blockchaincommons.airgap.SignedResponseHandler;
+import com.blockchaincommons.airgap.SignedResponseParser;
 import com.blockchaincommons.airgap.fx.components.QrCaptureView;
+import com.blockchaincommons.airgap.json.TransactionSignatureResponse;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
@@ -29,6 +32,8 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.SignatureDecodeException;
+import org.bitcoinj.core.Transaction;
 import org.bitcoinj.walletfx.OverlayableWindowController;
 import org.bitcoinj.walletfx.SendMoneyController;
 import org.bitcoinj.walletfx.WalletMainWindowController;
@@ -42,6 +47,8 @@ import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 
 /**
@@ -57,6 +64,9 @@ public class AirgapFxMainWindowController extends WalletMainWindowController {
     @FXML private ClickableBitcoinAddress addressControl;
 
     protected final AirgapFxWalletApp app;
+    private AirGapSigner airGapHardwareSigner;
+    private final SignedResponseParser signedResponseParser = new SignedResponseParser();
+    private final SignedResponseHandler signedResponseHandler = new SignedResponseHandler();
 
     public AirgapFxMainWindowController(AirgapFxWalletApp app) {
         super(app);
@@ -71,6 +81,8 @@ public class AirgapFxMainWindowController extends WalletMainWindowController {
 
     public void onBitcoinSetup() {
         super.onBitcoinSetup();
+        airGapHardwareSigner = new AirGapSigner(app.getWallet(), this);
+
         addressControl.addressProperty().bind(model.addressProperty());
         balance.textProperty().bind(createBalanceStringBinding(model.balanceProperty()));
         // Don't let the user click send money when the wallet is empty.
@@ -85,8 +97,7 @@ public class AirgapFxMainWindowController extends WalletMainWindowController {
     private void sendMoneyOut(ActionEvent event) {
         // Hide this UI and show the send money UI. This UI won't be clickable until the user dismisses send_money.
         OverlayableWindowController.OverlayUI<SendMoneyController> screen = overlayUI("send_money.fxml");
-        AirGapSigner signer = new AirGapSigner(app.getWallet(), this);
-        screen.controller.setSigner(signer);  // Sign via QR codes over "Air Gap"
+        screen.controller.setSigner(airGapHardwareSigner);  // Sign via QR codes over "Air Gap"
     }
 
     @FXML
@@ -131,6 +142,20 @@ public class AirgapFxMainWindowController extends WalletMainWindowController {
 
     private void scanListener(String result) {
         log.info("QR Scan Result {}", result);
+        Transaction tx = airGapHardwareSigner.getPendingTransaction();
+
+        TransactionSignatureResponse response = null;
+        try {
+            response = signedResponseParser.parse(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            signedResponseHandler.signWithResponse(tx, response);
+        } catch (SignatureDecodeException e) {
+            e.printStackTrace();
+        }
+        // TODO: Send tx to network
     }
 
 }

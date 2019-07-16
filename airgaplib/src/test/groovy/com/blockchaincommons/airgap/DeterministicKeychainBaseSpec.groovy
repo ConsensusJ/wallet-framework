@@ -63,13 +63,11 @@ abstract class DeterministicKeychainBaseSpec extends Specification {
      * @param inputIndex The input to verify
      * @param fromAddr The address we are trying to spend funds from
      * @throws ScriptException If {@code scriptSig#correctlySpends} fails with exception
+     * @deprecated Use {@link SignedResponseHandler#correctlySpendsInput}
      */
+    @Deprecated
     protected static void correctlySpendsInput(Transaction tx, int inputIndex, Address fromAddr) throws ScriptException {
-        Script scriptSig = tx.getInputs().get(inputIndex).getScriptSig();
-        Script scriptPubKey = ScriptBuilder.createOutputScript(fromAddr);
-        println "scriptSig: ${scriptSig}"
-        println "scriptPubKey: ${scriptPubKey}"
-        scriptSig.correctlySpends(tx, inputIndex, scriptPubKey, Script.ALL_VERIFY_FLAGS)
+        SignedResponseHandler.correctlySpendsInput(tx, inputIndex, fromAddr);
     }
     
     /**

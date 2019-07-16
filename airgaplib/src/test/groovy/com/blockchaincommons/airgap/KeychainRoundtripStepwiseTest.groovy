@@ -147,21 +147,17 @@ class KeychainRoundtripStepwiseTest extends DeterministicKeychainBaseSpec  {
     }
 
     def "NETWORK wallet can sign and verify a transaction using the signature from the JSON"() {
-        when: "we extract the signature from the JSON"
-        byte[]  signatureBytes = Base64.getDecoder().decode(response.transaction.inputSignatures[0].ecSignature)
-        TransactionSignature signature = TransactionSignature.decodeFromBitcoin(signatureBytes, true, true)
+        given:
+        def responseHandler = new SignedResponseHandler()
 
-        and: "we use the signature to sign the input"
-        TransactionInput input = transaction.getInput(0)
-        input.setScriptSig(ScriptBuilder.createInputScript(signature, fromKey))
-        input.setWitness(null)
-        println "Signature Chunk: ${transaction.getInput(0).getScriptSig().getChunks().get(0)}"
-
+        when: "we use the signature and pubKey from the response to sign the input"
+        responseHandler.signWithResponse(transaction, response)
+        
         then: "it verifies"
         transaction.verify()
 
         when: "We validate the signature on the input"
-        correctlySpendsInput(transaction, 0, fromAddr)
+        SignedResponseHandler.correctlySpendsInput(transaction, 0, fromAddr)
 
         then: "It validates successfully"
         noExceptionThrown()

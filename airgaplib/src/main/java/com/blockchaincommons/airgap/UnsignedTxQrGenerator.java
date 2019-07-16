@@ -153,6 +153,12 @@ public class UnsignedTxQrGenerator {
             } else {
                 log.error("path {} is not BIP44-compatible and correct for current net params", deterministicKey.getPathAsString());
             }
+        } else if (path.size() == 3) {
+            // xpub subtree for watching wallet
+            accountIndex = (long) path.get(0).num();
+            long changeIndex = (long) path.get(1).num();
+            addressIndex = (long) path.get(2).num();
+            change = (changeIndex == 1) ? true : null;
         } else {
             log.error("path {} is too short to be BIP44-compatible",deterministicKey.getPathAsString());
         }

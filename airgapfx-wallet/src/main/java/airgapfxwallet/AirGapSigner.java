@@ -35,6 +35,7 @@ import org.bitcoinj.walletfx.HardwareSigner;
 public class AirGapSigner implements HardwareSigner {
     private final UnsignedTxQrGenerator qrJsonGenerator;
     private final OverlayableWindowController windowController;
+    private Transaction pendingTransaction;
 
     public AirGapSigner(Wallet wallet, OverlayableWindowController windowController) {
         qrJsonGenerator = new UnsignedTxQrGenerator(wallet.getParams(), wallet.getActiveKeyChain());
@@ -43,6 +44,7 @@ public class AirGapSigner implements HardwareSigner {
 
     @Override
     public void displaySigningOverlay(Transaction tx, SendMoneyController sendMoneyController) {
+        pendingTransaction = tx;
         String qrJson = qrJsonGenerator.createSigningRequestString(tx);
         Image qrImage = QRCodeImages.imageFromString(qrJson, 600, 450);
         ImageView view = new ImageView(qrImage);
@@ -59,5 +61,9 @@ public class AirGapSigner implements HardwareSigner {
     @Override
     public String getButtonText() {
         return "Airgap Sign";
+    }
+
+    public Transaction getPendingTransaction() {
+        return pendingTransaction;
     }
 }
