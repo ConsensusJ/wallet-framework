@@ -21,7 +21,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import org.bitcoinj.core.Transaction;
+import org.bitcoinj.wallet.SendRequest;
 import org.bitcoinj.wallet.Wallet;
 import org.bitcoinj.walletfx.OverlayableWindowController;
 import org.bitcoinj.walletfx.SendMoneyController;
@@ -35,7 +35,7 @@ import org.bitcoinj.walletfx.HardwareSigner;
 public class AirGapSigner implements HardwareSigner {
     private final UnsignedTxQrGenerator qrJsonGenerator;
     private final OverlayableWindowController windowController;
-    private Transaction pendingTransaction;
+    private SendRequest pendingSendRequest;
 
     public AirGapSigner(Wallet wallet, OverlayableWindowController windowController) {
         qrJsonGenerator = new UnsignedTxQrGenerator(wallet.getParams(), wallet.getActiveKeyChain());
@@ -43,9 +43,9 @@ public class AirGapSigner implements HardwareSigner {
     }
 
     @Override
-    public void displaySigningOverlay(Transaction tx, SendMoneyController sendMoneyController) {
-        pendingTransaction = tx;
-        String qrJson = qrJsonGenerator.createSigningRequestString(tx);
+    public void displaySigningOverlay(SendRequest sendRequest, SendMoneyController sendMoneyController) {
+        pendingSendRequest = sendRequest;
+        String qrJson = qrJsonGenerator.createSigningRequestString(pendingSendRequest.tx);
         Image qrImage = QRCodeImages.imageFromString(qrJson, 600, 450);
         ImageView view = new ImageView(qrImage);
         view.setEffect(new DropShadow());
@@ -63,7 +63,7 @@ public class AirGapSigner implements HardwareSigner {
         return "Airgap Sign";
     }
 
-    public Transaction getPendingTransaction() {
-        return pendingTransaction;
+    public SendRequest getPendingTransaction() {
+        return pendingSendRequest;
     }
 }

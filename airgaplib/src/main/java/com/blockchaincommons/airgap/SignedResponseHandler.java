@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Base64;
+import java.util.List;
 
 /**
  *
@@ -28,27 +29,39 @@ public class SignedResponseHandler {
     private final boolean verify = true;
 
     public void signWithResponse(Transaction transaction, TransactionSignatureResponse response) throws SignatureDecodeException {
-        // TODO: Fix this so it doesn't use a hardcoded index of 0
-        TransactionSignature signature = this.signature(response, 0);
-        ECKey pubKey = this.pubKey(response, 0);
-        this.signInput(transaction.getInput(0), signature, pubKey);
-        if (verify) {
-            correctlySpendsInput(transaction, 0, LegacyAddress.fromKey(netParams, pubKey));
+        List<InputSignature> inputSignatures = response.getTransaction().getInputSignatures();
+        int inputIndex = 0;
+        for (InputSignature inputSig : inputSignatures) {
+            TransactionSignature signature = sigFromEcString(inputSig.getEcSignature());
+            ECKey pubKey = pubKeyFromString(inputSig.getEcPublicKey());
+            this.signInput(transaction.getInput(inputIndex), signature, pubKey);
+            if (verify) {
+                correctlySpendsInput(transaction, inputIndex, LegacyAddress.fromKey(netParams, pubKey));
+            }
+            inputIndex++;
         }
     }
 
     TransactionSignature signature(TransactionSignatureResponse response, int index) throws SignatureDecodeException {
         String ecSignature = response.getTransaction().getInputSignatures().get(index).getEcSignature();
+        return sigFromEcString(ecSignature);
+    }
+
+    static TransactionSignature sigFromEcString(String ecSignature) throws SignatureDecodeException{
         byte[]  signatureBytes = Base64.getDecoder().decode(ecSignature);
         return TransactionSignature.decodeFromBitcoin(signatureBytes,
                 true,
                 true);
     }
 
-    ECKey pubKey(TransactionSignatureResponse response, int index) throws SignatureDecodeException {
-        String ecPublicKey = response.getTransaction().getInputSignatures().get(index).getEcPublicKey();
+    static ECKey pubKeyFromString(String ecPublicKey) {
         byte[]  pubKeyBytes = Base64.getDecoder().decode(ecPublicKey);
         return ECKey.fromPublicOnly(pubKeyBytes);
+    }
+
+    ECKey pubKey(TransactionSignatureResponse response, int index) throws SignatureDecodeException {
+        String ecPublicKey = response.getTransaction().getInputSignatures().get(index).getEcPublicKey();
+        return pubKeyFromString(ecPublicKey);
     }
 
     public void signInput(TransactionInput input, TransactionSignature signature, ECKey publicKey ) {
