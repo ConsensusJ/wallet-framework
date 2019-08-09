@@ -1,13 +1,13 @@
 plugins {
     id 'groovy'
     id 'application'
-    id 'org.openjfx.javafxplugin'           version '0.0.7'
-    id 'org.beryx.jlink'                    version '2.10.2'
+    id 'org.openjfx.javafxplugin'           version '0.0.8'
+    id 'org.beryx.jlink'                    version '2.14.0'
     id 'org.javamodularity.moduleplugin'    version "1.5.0"
 }
 
-sourceCompatibility = 12
-targetCompatibility = 12
+sourceCompatibility = 11
+targetCompatibility = 11
 
 version = '0.1.3-SNAPSHOT'
 
@@ -29,7 +29,6 @@ dependencies {
         exclude group: 'org.openjfx'    
     }
 
-    implementation 'org.consensusj.supernautfx:supernautfx:0.0.2'
     implementation "io.micronaut:micronaut-inject-java:1.1.0"
     implementation "javax.inject:javax.inject:1"
 
@@ -76,7 +75,7 @@ jlink {
         requires 'java.logging'
         requires 'java.desktop'
 
-        requires 'org.slf4j'
+        forceMerge 'org.slf4j'
 
         requires 'javafx.graphics'
         requires 'javafx.controls'
@@ -86,7 +85,7 @@ jlink {
         // See https://badass-jlink-plugin.beryx.org/releases/latest/#_jpackage for
         // where the plugin's jpackage task finds the path to the jpackage tool by default
         // (Currently you need to manually install a OpenJDK 13 Early Access Build of jpackage)
-        skipInstaller = false
+        skipInstaller = true
 
         // macOS options
         imageOptions = ["--verbose", "--resource-dir", "${projectDir}/src/macos/resource-dir", "--app-version", version]

@@ -45,7 +45,7 @@ public class OmniJWalletApp extends WalletFxApp {
     
     private static final HDPath
             BIP44_ACCOUNT_ZERO_PATH_TESTNET = HDPath
-                .of(new ChildNumber(44, true))
+                .M(new ChildNumber(44, true))
                 .extend(ChildNumber.ONE_HARDENED)    // coinType for TestNet
                 .extend(ChildNumber.ZERO_HARDENED);// account zero
 

@@ -1,8 +1,8 @@
 plugins {
     id 'groovy'
     id 'application'
-    id 'org.openjfx.javafxplugin'           version '0.0.7'
-    id 'org.beryx.jlink'                    version '2.10.2'
+    id 'org.openjfx.javafxplugin'           version '0.0.8'
+    id 'org.beryx.jlink'                    version '2.14.0'
     id 'org.javamodularity.moduleplugin'    version "1.5.0"
 }
 
@@ -10,16 +10,16 @@ dependencies {
     implementation project (':supernautfx')
 
     implementation "javax.inject:javax.inject:1"
-    implementation "io.micronaut:micronaut-inject-java:1.1.0"
+    implementation "io.micronaut:micronaut-inject-java:1.1.4"
 
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
     implementation "org.slf4j:slf4j-jdk14:${slf4jVersion}"
 
-    annotationProcessor "io.micronaut:micronaut-inject-java:1.1.0"
+    annotationProcessor "io.micronaut:micronaut-inject-java:1.1.4"
 }
 
-sourceCompatibility = 12
-targetCompatibility = 12
+sourceCompatibility = 11
+targetCompatibility = 11
 
 mainClassName = "$moduleName/org.consensusj.supernautfx.sample.hello.HelloSupernautFxApp"
 
@@ -45,10 +45,15 @@ jlink {
         jvmArgs = []
     }
     mergedModule {
-        requires 'org.slf4j'
+        requires 'java.logging'
+        requires 'javafx.graphics'
+        requires 'javafx.controls'
+        requires 'javafx.fxml'
+
+        forceMerge 'org.slf4j'
     }
     jpackage {
-        skipInstaller = false
+        skipInstaller = true
         imageOptions = ["--verbose", "--app-version", version]
         installerOptions = ["--app-version", version]
     }

@@ -1,13 +1,13 @@
 plugins {
     id 'groovy'
     id 'application'
-    id 'org.openjfx.javafxplugin'           version '0.0.7'
-    id 'org.beryx.jlink'                    version '2.10.2'
+    id 'org.openjfx.javafxplugin'           version '0.0.8'
+    id 'org.beryx.jlink'                    version '2.14.0'
     id 'org.javamodularity.moduleplugin'    version "1.5.0"
 }
 
-sourceCompatibility = 12
-targetCompatibility = 12
+sourceCompatibility = 11
+targetCompatibility = 11
 
 version = '0.0.1-SNAPSHOT'
 
@@ -23,8 +23,6 @@ repositories {
 def omnijVersion = "0.5.8"
 
 dependencies {
-    implementation project(':supernautfx')
-
     implementation "${bitcoinjGroup}:${bitcoinjArtifact}:${bitcoinjVersion}"
     implementation ("${bitcoinjGroup}:${bitcoinjWalletFxArtifact}:${bitcoinjVersion}") {
         exclude group: 'org.openjfx'    
