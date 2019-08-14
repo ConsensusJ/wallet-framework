@@ -2,7 +2,7 @@ plugins {
     id 'groovy'
     id 'application'
     id 'org.openjfx.javafxplugin'           version '0.0.8'
-    id 'org.beryx.jlink'                    version '2.14.0'
+    id 'org.beryx.jlink'                    version '2.14.1'
     id 'org.javamodularity.moduleplugin'    version "1.5.0"
 }
 
@@ -86,20 +86,14 @@ jlink {
     jpackage {
         // See https://badass-jlink-plugin.beryx.org/releases/latest/#_jpackage for
         // where the plugin's jpackage task finds the path to the jpackage tool by default
-        // (Currently you need to manually install a OpenJDK 13 Early Access Build of jpackage)
+        // (Currently you need to manually install a OpenJDK 14 Early Access Build of jpackage)
         jpackageHome = System.getenv('BADASS_JLINK_JPACKAGE_HOME')
         skipInstaller = false
-        if (System.properties['os.name'].toLowerCase() == "mac os x") {
-            installerType = "dmg"
-        } else if (System.properties['os.name'].toLowerCase().contains('windows')) {
-            installerType = "exe"
-        } else {
-            installerType = "deb"
-        }
+        identifier = appName
 
         // macOS options
         imageOptions = ["--verbose", "--resource-dir", "${projectDir}/src/macos/resource-dir", "--app-version", version]
-        installerOptions = ["--identifier", appName, "--app-version", version]
+        installerOptions = ["--app-version", version]
 
     }
 }
