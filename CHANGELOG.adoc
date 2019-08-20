@@ -1,0 +1,12 @@
+= Wallet-Framework Changes
+:homepage: https://github.com/ConensusJ/wallet-framework
+
+A high-level view of the changes in each wallet-framework binary release.
+
+== v0.1.3
+
+Released: 2019.08.19
+
+`airgapfx-wallet` can send and receive, but seems to have issues with initialization. The UI needs work. First release recorded in changelog.
+
+

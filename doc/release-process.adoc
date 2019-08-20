@@ -1,0 +1,35 @@
+= ConsensusJ Wallet-Framework Release Process
+
+== Requirements
+
+* OpenJDK 11 or later
+* DMG build/release is on macOS
+* Untested DEB build on CI
+
+== Main Release Process
+
+. Update `CHANGELOG.adoc`
+. Set versions
+.. `gradle.properties`
+. Commit version bump and changelog.
+. Full build, test
+.. `./gradlew clean build airgapfx-wallet:jpackage`
+. Tag: `git tag -a v0.x.y -m "Release 0.x.y"`
+. Push: `git push --tags origin master`
+. Publish DMG to S3
+. JAR artifcats are not published to Bintray, yet.
+
+
+== Announcements
+
+. Not yet.
+
+== After release
+
+. Set versions back to -SNAPSHOT
+.. `gradle.properties`
+.. `CHANGELOG.adoc`
+. Commit and push to master
+
+
+
