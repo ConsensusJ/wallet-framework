@@ -17,7 +17,7 @@
 . Tag: `git tag -a v0.x.y -m "Release 0.x.y"`
 . Push: `git push --tags origin master`
 . Publish DMG to S3
-. JAR artifcats are not published to Bintray, yet.
+. JAR artifacts are not published to Bintray, yet.
 
 
 == Announcements

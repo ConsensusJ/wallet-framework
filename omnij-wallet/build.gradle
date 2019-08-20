@@ -2,7 +2,7 @@ plugins {
     id 'groovy'
     id 'application'
     id 'org.openjfx.javafxplugin'           version '0.0.8'
-    id 'org.beryx.jlink'                    version '2.14.0'
+    id 'org.beryx.jlink'                    version '2.14.1'
     id 'org.javamodularity.moduleplugin'    version "1.5.0"
 }
 
@@ -34,7 +34,7 @@ dependencies {
 
     implementation "io.reactivex.rxjava2:rxjava:2.2.9"
 
-    implementation 'org.consensusj.supernautfx:supernautfx:0.0.2'
+    implementation "org.consensusj.supernaut:supernautfx:${supernautVersion}"
     implementation "io.micronaut:micronaut-inject-java:1.1.0"
     implementation "javax.inject:javax.inject:1"
 

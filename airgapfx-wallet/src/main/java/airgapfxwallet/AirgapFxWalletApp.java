@@ -18,9 +18,7 @@ package airgapfxwallet;
 
 import com.blockchaincommons.airgap.BipStandardKeyChainGroupStructure;
 import com.blockchaincommons.airgap.fx.camera.CameraService;
-import com.google.common.collect.ImmutableList;
 import javafx.stage.Stage;
-import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.wallet.KeyChainGroupStructure;
@@ -34,8 +32,6 @@ import javax.inject.Singleton;
 import java.util.concurrent.TimeoutException;
 
 import com.github.sarxos.webcam.Webcam;
-
-import static org.bitcoinj.wallet.DeterministicKeyChain.BIP44_ACCOUNT_ZERO_PATH;
 
 /**
  * Main class for WalletTemplate that uses SupernautFx and does not have

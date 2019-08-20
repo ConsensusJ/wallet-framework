@@ -18,16 +18,17 @@ repositories {
 }
 
 dependencies {
-    implementation project(':supernautfx')
     implementation project(':airgaplib')
     implementation project(':airgapfx')
+
+    implementation "org.consensusj.supernaut:supernautfx:${supernautVersion}"
 
     implementation "${bitcoinjGroup}:${bitcoinjArtifact}:${bitcoinjVersion}"
     implementation ("${bitcoinjGroup}:${bitcoinjWalletFxArtifact}:${bitcoinjVersion}") {
         exclude group: 'org.openjfx'    
     }
 
-    implementation "io.micronaut:micronaut-inject-java:1.1.0"
+    implementation "io.micronaut:micronaut-inject-java:${micronautVersion}"
     implementation "javax.inject:javax.inject:1"
 
     implementation 'com.google.guava:guava:27.1-android'
@@ -46,7 +47,7 @@ dependencies {
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
     implementation "org.slf4j:slf4j-jdk14:${slf4jVersion}"
 
-    annotationProcessor "io.micronaut:micronaut-inject-java:1.1.0"
+    annotationProcessor "io.micronaut:micronaut-inject-java:${micronautVersion}"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
