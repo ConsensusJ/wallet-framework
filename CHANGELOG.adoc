@@ -3,6 +3,10 @@
 
 A high-level view of the changes in each wallet-framework binary release.
 
+== v0.1.4-SNAPSHOT
+
+In progress
+
 == v0.1.3
 
 Released: 2019.08.19
