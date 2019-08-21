@@ -62,7 +62,7 @@ patchModules.config = [
 ]
 
 javafx {
-    modules = [ 'javafx.graphics', 'javafx.controls', 'javafx.fxml' ]
+    modules = [ 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.swing']
 }
 
 //mainClassName = "$moduleName/airgapfxwallet.AirgapFxWalletApp"
