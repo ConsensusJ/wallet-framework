@@ -23,7 +23,10 @@ dependencies {
         exclude group: 'org.openjfx'
     }
 
-    implementation "org.consensusj.supernaut:supernautfx:${supernautVersion}"
+    implementation ("org.consensusj.supernaut:supernautfx:${supernautVersion}")  {
+        exclude group: 'org.openjfx'
+    }
+
 
     implementation "${bitcoinjGroup}:${bitcoinjArtifact}:${bitcoinjVersion}"
     implementation ("${bitcoinjGroup}:${bitcoinjWalletFxArtifact}:${bitcoinjVersion}") {
