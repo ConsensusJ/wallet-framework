@@ -19,7 +19,9 @@ repositories {
 
 dependencies {
     implementation project(':airgaplib')
-    implementation project(':airgapfx')
+    implementation (project(':airgapfx')) {
+        exclude group: 'org.openjfx'
+    }
 
     implementation "org.consensusj.supernaut:supernautfx:${supernautVersion}"
 
