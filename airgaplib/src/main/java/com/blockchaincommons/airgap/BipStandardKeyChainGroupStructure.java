@@ -20,7 +20,7 @@ public class BipStandardKeyChainGroupStructure implements KeyChainGroupStructure
 
     private static ChildNumber COINTYPE_BTC = new ChildNumber(0, true);
     private static ChildNumber COINTYPE_TBTC = new ChildNumber(1, true);
-    private static ChildNumber COINTYPE_LBTC = new ChildNumber(2, true);
+    private static ChildNumber COINTYPE_LTC = new ChildNumber(2, true);
 
     public static ChildNumber CHANGE_RECEIVING = new ChildNumber(0, false);
     public static ChildNumber CHANGE_CHANGE = new ChildNumber(1, false);
