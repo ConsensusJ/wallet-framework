@@ -21,12 +21,8 @@ dependencies {
         exclude group: 'com.nativelibs4java', module: 'bridj'
     }
 
-    //implementation 'com.google.zxing:core:3.3.3'
-    //implementation 'com.google.zxing:javase:3.3.3'
-    implementation "com.github.msgilligan.zxing:core:msgilligan-modular-javase-SNAPSHOT"
-    implementation ("com.github.msgilligan.zxing:javase:msgilligan-modular-javase-SNAPSHOT") {
-        exclude group: 'com.github.msgilligan.zxing', module: 'core'
-    }
+    implementation 'com.google.zxing:core:3.4.0'
+    implementation 'com.google.zxing:javase:3.4.0'
 
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
     runtimeOnly "org.slf4j:slf4j-jdk14:${slf4jVersion}"

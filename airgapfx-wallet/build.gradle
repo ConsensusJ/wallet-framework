@@ -39,11 +39,8 @@ dependencies {
     implementation 'com.google.guava:guava:27.1-android'
     implementation 'de.jensd:fontawesomefx:8.0.0'
 
-    //implementation 'com.google.zxing:core:3.3.3'
-    implementation "com.github.msgilligan.zxing:core:msgilligan-modular-javase-SNAPSHOT"
-    implementation ("com.github.msgilligan.zxing:javase:msgilligan-modular-javase-SNAPSHOT") {
-        exclude group: 'com.github.msgilligan.zxing', module: 'core'
-    }
+    implementation 'com.google.zxing:core:3.4.0'
+    implementation 'com.google.zxing:javase:3.4.0'
 
     implementation ("com.github.sarxos:webcam-capture:0.3.12") {
         exclude group: 'com.nativelibs4java', module: 'bridj'
