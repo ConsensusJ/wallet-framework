@@ -20,8 +20,7 @@ before_script:
 build:
   script:
     - java -version
-    #- ./gradlew buildCI airgapfx-wallet:jpackage --stacktrace
-    - ./gradlew buildCI --stacktrace
+    - ./gradlew buildCI airgapfx-wallet:jpackage --stacktrace
   artifacts:
     paths:
       - airgapfx-wallet/build/jpackage
