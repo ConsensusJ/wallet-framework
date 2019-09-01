@@ -1,4 +1,4 @@
-image: ubuntu:disco
+image: ubuntu:bionic
 
 variables:
   JDK14_FILENAME: "openjdk-14-jpackage+1-35_linux-x64_bin.tar.gz"
@@ -11,7 +11,7 @@ before_script:
   - echo $GRADLE_OPTS
   - apt-get update
   - apt-get -y upgrade
-  - apt-get -y install openjdk-12-jdk curl rpm fakeroot
+  - apt-get -y install openjdk-11-jdk curl rpm fakeroot
   - echo Downloading jpackage tool from $JDK14_URL
   - curl --silent --show-error -O $JDK14_URL
   - tar xf $JDK14_FILENAME

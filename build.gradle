@@ -39,9 +39,9 @@ allprojects {
 subprojects {
     apply plugin: 'groovy'
     /*
-     * Supernaut will target recent JDK versions. For now library modules will
-     * target JDK 11 and sample apps will use JDK 12. We intend to migrate to
-     * JDK 13 as soon as it is final, since 13 should have `jpackage` included.
+     * Wallet-Framework will target recent JDK versions. For now library modules will
+     * target JDK 11 and sample apps will also use JDK 11. We intend to migrate to
+     * JDK 14 as soon as it is final, since 14 should have `jpackage` included.
      *  We want to focus on jpackaged apps and these should always use recent JDK.
      */
     sourceCompatibility = 11
