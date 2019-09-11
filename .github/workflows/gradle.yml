@@ -19,3 +19,8 @@ jobs:
         java-version: ${{ matrix.java }}
     - name: Build with Gradle
       run: ./gradlew buildCI airgapfx-wallet:jlink --stacktrace
+    - namne Upload image as artifact
+    - uses: actions/upload-artifact@master
+      with:
+        name: my-artifact
+        path: airgapfx-wallet/build/image
