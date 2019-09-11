@@ -22,5 +22,5 @@ jobs:
     - namne Upload image as artifact
     - uses: actions/upload-artifact@master
       with:
-        name: my-artifact
+        name: wallet-jlink-image
         path: airgapfx-wallet/build/image
