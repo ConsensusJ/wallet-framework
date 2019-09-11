@@ -20,7 +20,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew buildCI airgapfx-wallet:jlink --stacktrace
     - name: Upload image as artifact
-    - uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@master
       with:
         name: wallet-jlink-image
         path: airgapfx-wallet/build/image
