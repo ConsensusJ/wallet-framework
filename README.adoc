@@ -9,6 +9,8 @@ v0.1.4
 :caution-caption: :fire:
 :warning-caption: :warning:
 
+image:https://github.com/ConsensusJ/wallet-framework/workflows/Java%20CI/badge.svg["Build Status", link="https://github.com/ConsensusJ/wallet-framework/actions"]
+
 A framework for writing cryptocurrency wallets in https://docs.oracle.com/javase/specs/jls/se12/html/index.html[Java] or other https://en.wikipedia.org/wiki/List_of_JVM_languages#JVM_languages[OpenJDK (Java VM)] languages. The intial focus is on https://bitcoin.org/[Bitcoin] using https://github.com/bitcoinj/bitcoinj/[bitcoinj] but the intention is to add other cryptocurrencies as interest, funding, and contributions permit. Due to https://github.com/msgilligan[msgilligan]'s work on https://github.com/OmniLayer/OmniJ[OmniJ] it is likely that https://www.omnilayer.org[Omni Layer] support will be added as an asset metalayer above Bitcoin.
 
 The inital focus is on creating desktop wallets using https://openjfx.io[JavaFX], but there will be non-GUI components that could be used in other environments such as Android, iOS, and server/cloud environments.
