@@ -9,7 +9,7 @@ variables:
 before_script:
   - apt-get update
   - apt-get -y upgrade
-  - apt-get -y install openjdk-11-jdk curl rpm fakeroot wget gnupg2
+  - apt-get -y install openjdk-11-jdk curl rpm fakeroot wget gnupg2 software-properties-common
   # Install AdoptOpenJDK 12 following instructions from here: https://adoptopenjdk.net/installation.html
   - wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
   - add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/
