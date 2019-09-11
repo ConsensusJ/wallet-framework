@@ -1,6 +1,6 @@
 name: Java CI
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -22,5 +22,5 @@ jobs:
     - name: Upload image as artifact
       uses: actions/upload-artifact@master
       with:
-        name: wallet-${{ matrix.os }}-jdk${{ matrix.java }}-image
+        name: netwallet-${{ matrix.os }}-jdk${{ matrix.java }}-image
         path: airgapfx-wallet/build/image
