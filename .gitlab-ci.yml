@@ -7,12 +7,14 @@ variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
 before_script:
-  - echo $BADASS_JLINK_JPACKAGE_HOME
-  - echo $GRADLE_OPTS
   - apt-get update
   - apt-get -y upgrade
   - apt-get -y install openjdk-11-jdk curl rpm fakeroot
-  - echo Downloading jpackage tool from $JDK14_URL
+  # Install AdoptOpenJDK 12 following instructions from here: https://adoptopenjdk.net/installation.html
+  - wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
+  - add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/
+  - apt-get -y install adoptopenjdk-12-hotspot
+  - echo Downloading jpackage tool from $JDK14_URL to $BADASS_JLINK_JPACKAGE_HOME
   - curl --silent --show-error -O $JDK14_URL
   - tar xf $JDK14_FILENAME
   - $BADASS_JLINK_JPACKAGE_HOME/bin/jpackage --version
@@ -20,6 +22,7 @@ before_script:
 build:
   script:
     - java -version
+    - echo Gradle OPTS are $GRADLE_OPTS
     - ./gradlew buildCI airgapfx-wallet:jpackage --stacktrace
   artifacts:
     paths:
