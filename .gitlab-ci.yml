@@ -1,9 +1,6 @@
 image: ubuntu:bionic
 
 variables:
-  JDK14_FILENAME: "openjdk-14-jpackage+1-35_linux-x64_bin.tar.gz"
-  JDK14_URL: "https://download.java.net/java/early_access/jpackage/1/$JDK14_FILENAME"
-  BADASS_JLINK_JPACKAGE_HOME: "$CI_PROJECT_DIR/jdk-14"
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
 before_script:
@@ -14,16 +11,12 @@ before_script:
   - wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
   - add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/
   - apt-get -y install adoptopenjdk-12-hotspot
-  - echo Downloading jpackage tool from $JDK14_URL to $BADASS_JLINK_JPACKAGE_HOME
-  - curl --silent --show-error -O $JDK14_URL
-  - tar xf $JDK14_FILENAME
-  - $BADASS_JLINK_JPACKAGE_HOME/bin/jpackage --version
 
 build:
   script:
     - java -version
     - echo Gradle OPTS are $GRADLE_OPTS
-    - ./gradlew buildCI airgapfx-wallet:jpackage --stacktrace
+    - ./gradlew -Ddownload.jpackage=true buildCI airgapfx-wallet:jpackage --stacktrace
   artifacts:
     paths:
       - airgapfx-wallet/build/jpackage

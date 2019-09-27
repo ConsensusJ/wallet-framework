@@ -2,8 +2,9 @@ plugins {
     id 'groovy'
     id 'application'
     id 'org.openjfx.javafxplugin'           version '0.0.8'
-    id 'org.beryx.jlink'                    version '2.14.1'
+    id 'org.beryx.jlink'                    version '2.15.1'
     id 'org.javamodularity.moduleplugin'    version "1.5.0"
+    id "de.undercouch.download"             version "4.0.0"
 }
 
 sourceCompatibility = 11
@@ -59,6 +60,7 @@ patchModules.config = [
 ]
 
 javafx {
+    version = 13
     modules = [ 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.swing']
 }
 
@@ -66,6 +68,8 @@ javafx {
 mainClassName = "airgapfxwallet.AirgapFxWalletApp"
 
 def appName = 'NetWallet'
+
+ext.os = org.gradle.internal.os.OperatingSystem.current()
 
 jlink {
     addExtraDependencies("javafx")
@@ -87,8 +91,9 @@ jlink {
     jpackage {
         // See https://badass-jlink-plugin.beryx.org/releases/latest/#_jpackage for
         // where the plugin's jpackage task finds the path to the jpackage tool by default
-        // (Currently you need to manually install a OpenJDK 14 Early Access Build of jpackage)
-        jpackageHome = System.getenv('BADASS_JLINK_JPACKAGE_HOME')
+        if (Boolean.getBoolean('download.jpackage')) {
+            jpackageHome = downloadJPackage()
+        }
         skipInstaller = false
         identifier = appName
 
@@ -97,4 +102,47 @@ jlink {
         installerOptions = ["--app-version", version]
 
     }
+}
+
+// #### The code below is needed only if you use the downloadJPackage() method to install the jpackage tool ####
+// Code copied from build.gradle in https://github.com/beryx/fxgl-sliding-puzzle/
+
+/** @return  [url, extension, directory] */
+String[] getJPackageCoordinates() {
+    if(os.macOsX) return [
+            'https://download.java.net/java/early_access/jpackage/1/openjdk-14-jpackage+1-35_osx-x64_bin.tar.gz',
+            'tar.gz',
+            'jdk-14.jdk/Contents/Home'
+    ]
+    if(os.windows) return [
+            'https://download.java.net/java/early_access/jpackage/1/openjdk-14-jpackage+1-35_windows-x64_bin.zip',
+            'zip',
+            'jdk-14'
+    ]
+    return [
+            'https://download.java.net/java/early_access/jpackage/1/openjdk-14-jpackage+1-35_linux-x64_bin.tar.gz',
+            'tar.gz',
+            'jdk-14'
+    ]
+}
+
+String downloadJPackage() {
+    def (url, extension, directory) = getJPackageCoordinates()
+    def downloadDir = "$buildDir/download"
+    tasks.jpackageImage.doFirst {
+        def execExt = os.windows ? '.exe' : ''
+        if(!file("$downloadDir/$directory/bin/jpackage$execExt").file) {
+            def jdkArchivePath = "$downloadDir/jdk-jpackage.$extension"
+            download {
+                src url
+                dest jdkArchivePath
+                overwrite false
+            }
+            copy {
+                from ((extension == 'tar.gz') ? tarTree(resources.gzip(jdkArchivePath)) : zipTree(jdkArchivePath))
+                into downloadDir
+            }
+        }
+    }
+    return "$downloadDir/$directory"
 }

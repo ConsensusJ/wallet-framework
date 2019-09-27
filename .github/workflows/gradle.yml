@@ -18,9 +18,9 @@ jobs:
       with:
         java-version: ${{ matrix.java }}
     - name: Build with Gradle
-      run: ./gradlew buildCI airgapfx-wallet:jlink --stacktrace
-    - name: Upload image as artifact
+      run: ./gradlew -Ddownload.jpackage=true buildCI airgapfx-wallet:jpackage --stacktrace
+    - name: Upload jpackage directory as artifact
       uses: actions/upload-artifact@master
       with:
-        name: netwallet-${{ matrix.os }}-jdk${{ matrix.java }}-image
-        path: airgapfx-wallet/build/image
+        name: netwallet-${{ matrix.os }}-jdk${{ matrix.java }}-jpackage
+        path: airgapfx-wallet/build/jpackage
