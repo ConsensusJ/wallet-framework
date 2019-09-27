@@ -26,11 +26,13 @@ import com.google.common.util.concurrent.MoreExecutors;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -43,6 +45,8 @@ import org.bitcoinj.walletfx.OverlayableWindowController;
 import org.bitcoinj.walletfx.SendMoneyController;
 import org.bitcoinj.walletfx.WalletMainWindowController;
 import org.bitcoinj.walletfx.WalletSettingsController;
+import org.bitcoinj.walletfx.cell.TransactionListCell;
+import org.bitcoinj.walletfx.cell.TransactionStringConverter;
 import org.bitcoinj.walletfx.controls.ClickableBitcoinAddress;
 import org.bitcoinj.walletfx.controls.NotificationBarPane;
 import org.bitcoinj.walletfx.utils.easing.EasingMode;
@@ -69,6 +73,7 @@ public class AirgapFxMainWindowController extends WalletMainWindowController {
     @FXML private Button sendMoneyOutBtn;
     @FXML private Button scanBtn;
     @FXML private ClickableBitcoinAddress addressControl;
+    @FXML private ListView<Transaction> transactionListView;
 
     protected final AirgapFxWalletApp app;
     private AirGapSigner airGapHardwareSigner;
@@ -99,6 +104,10 @@ public class AirgapFxMainWindowController extends WalletMainWindowController {
         // Don't let the user click the "scan QR" button if there is no camera
         var cameraAvailable = app.cameraService != null;
         scanBtn.setDisable(!cameraAvailable);
+        // We wait to onBitcoinSetup() to do this because prior to that getWallet() will return null.
+        TransactionStringConverter converter = new TransactionStringConverter(this.app.getWallet());
+        transactionListView.setCellFactory(list -> new TransactionListCell(converter));
+        Bindings.bindContent(transactionListView.getItems(), model.getTransactionList());
     }
 
 
