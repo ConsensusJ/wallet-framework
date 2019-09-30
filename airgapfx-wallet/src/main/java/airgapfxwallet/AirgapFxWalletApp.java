@@ -40,7 +40,7 @@ import com.github.sarxos.webcam.Webcam;
 @Singleton
 public class AirgapFxWalletApp extends WalletFxApp {
     private static final Logger log = LoggerFactory.getLogger(AirgapFxWalletApp.class);
-    private static final String APP_NAME = "Blockchain Commons Reference Network-Wallet";
+    private static final String APP_NAME = "ConsensusJ Wallet";
     private static final String mainFxmlResName = "main.fxml";
     private static final String mainCssResName = "wallet.css";
 

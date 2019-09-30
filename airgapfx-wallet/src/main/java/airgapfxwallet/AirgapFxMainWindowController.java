@@ -63,7 +63,7 @@ import java.util.concurrent.Executors;
 
 
 /**
- * Main window controller for Blockchain Commons Network Wallet
+ * Main window controller for ConsensusJ Network Wallet
  */
 @Singleton
 public class AirgapFxMainWindowController extends WalletMainWindowController {

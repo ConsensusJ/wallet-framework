@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Main window controller for Blockchain Commons Network Wallet
+ * Main window controller for OmniJ Network Wallet
  */
 @Singleton
 public class OmniJMainWindowController extends WalletMainWindowController {
