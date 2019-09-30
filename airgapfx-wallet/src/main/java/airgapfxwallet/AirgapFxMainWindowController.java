@@ -106,7 +106,12 @@ public class AirgapFxMainWindowController extends WalletMainWindowController {
         scanBtn.setDisable(!cameraAvailable);
         // We wait to onBitcoinSetup() to do this because prior to that getWallet() will return null.
         TransactionStringConverter converter = new TransactionStringConverter(this.app.getWallet());
-        transactionListView.setCellFactory(list -> new TransactionListCell(converter));
+        transactionListView.setCellFactory(list -> {
+            var cell = new TransactionListCell(converter);
+            // TODO: This doesn't handle selection highlighting correctly
+            cell.setStyle("-fx-background-color: transparent; -fx-text-fill: black");
+            return cell;
+        });
         Bindings.bindContent(transactionListView.getItems(), model.getTransactionList());
     }
 

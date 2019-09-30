@@ -6,8 +6,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.effect.BoxBlur?>
-<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -42,22 +40,15 @@
         <Button cancelButton="true" mnemonicParsing="false" styleClass="fat-button" text="Secondary" />
       </children>
     </HBox>
-    <ImageView fitHeight="243.0" fitWidth="243.0" opacity="0.28" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="-36.0" AnchorPane.rightAnchor="-34.0">
-      <effect>
-        <ColorAdjust>
-          <input>
-            <BoxBlur height="20.0" width="20.0" />
-          </input>
-        </ColorAdjust>
-      </effect>
+    <ImageView fitHeight="256.0" fitWidth="256.0" opacity="0.68" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="-7.0" AnchorPane.rightAnchor="0.0">
       <image>
-        <Image url="@blockchaincommons_logo.png" />
+        <Image url="@consensusj_logo.png" />
       </image>
     </ImageView>
     <ClickableBitcoinAddress fx:id="addressControl" layoutY="45.0" prefHeight="21.0" prefWidth="391.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="195.0" />
     <StackPane layoutX="14.0" layoutY="81.0" prefHeight="249.0" prefWidth="572.0" style="-fx-border-color: lightgrey; -fx-border-style: dashed" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="81.0">
        <children>
-          <ListView fx:id="transactionListView" prefHeight="200.0" prefWidth="200.0" />
+          <ListView fx:id="transactionListView" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" />
        </children>
     </StackPane>
     <HBox spacing="20" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="17.0">
