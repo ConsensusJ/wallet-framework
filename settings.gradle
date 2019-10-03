@@ -1,5 +1,5 @@
 include 'airgaplib'
 include 'airgapfx'
-include 'airgapfx-wallet'
+include 'consensusj-netwallet-fx'
 include 'omnij-wallet'
 
