@@ -35,7 +35,7 @@ javafx {
 }
 
 application {
-    mainClassName = 'com.blockchaincommons.airgap.fx.demoapp.DemoQRScannerApplication'
+    mainClassName = 'org.consensusj.airgap.fx.demoapp.DemoQRScannerApplication'
 }
 
 task getDeps(type: Copy) {

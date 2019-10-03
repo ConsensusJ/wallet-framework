@@ -1,7 +1,7 @@
 /**
  *
  */
-module wallet.framework.airgapfx.wallet.main {
+module netwalletfx {
     requires java.logging;
     requires java.desktop;
 
@@ -11,8 +11,8 @@ module wallet.framework.airgapfx.wallet.main {
 
     requires org.bitcoinj.walletfx;
     requires org.consensusj.supernautfx;
-    requires com.blockchaincommons.airgap.fx;
-    requires com.blockchaincommons.airgap;
+    requires org.consensusj.airgap.fx;
+    requires org.consensusj.airgap;
     requires javax.inject;
     /*
      * Although the classes in a SupernautFX app (like this one, hopefully) use annotations
@@ -38,8 +38,8 @@ module wallet.framework.airgapfx.wallet.main {
 
 
     /* Export/Open the App */
-    exports airgapfxwallet;
+    exports netwalletfx;
 
-    opens airgapfxwallet to org.bitcoinj.walletfx, javafx.fxml, java.base;
+    opens netwalletfx to org.bitcoinj.walletfx, javafx.fxml, java.base;
 
 }

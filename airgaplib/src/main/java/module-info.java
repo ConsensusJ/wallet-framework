@@ -1,7 +1,7 @@
 /**
  *
  */
-module com.blockchaincommons.airgap {
+module org.consensusj.airgap {
     requires org.bitcoinj.core;
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.core;
@@ -10,7 +10,7 @@ module com.blockchaincommons.airgap {
 
     requires com.google.common;
 
-    exports com.blockchaincommons.airgap;
-    exports com.blockchaincommons.airgap.json;
-    exports com.blockchaincommons.airgap.keychain;
+    exports org.consensusj.airgap;
+    exports org.consensusj.airgap.json;
+    exports org.consensusj.airgap.keychain;
 }

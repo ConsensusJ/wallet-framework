@@ -1,7 +1,7 @@
 /**
  *
  */
-module com.blockchaincommons.airgap.fx {
+module org.consensusj.airgap.fx {
     requires java.desktop;
 
     requires javafx.controls;
@@ -14,8 +14,8 @@ module com.blockchaincommons.airgap.fx {
     requires webcam.capture;
     requires org.slf4j;
 
-    opens com.blockchaincommons.airgap.fx.demoapp to javafx.fxml;
-    exports com.blockchaincommons.airgap.fx.demoapp;
-    exports com.blockchaincommons.airgap.fx.camera;
-    exports com.blockchaincommons.airgap.fx.components;
+    opens org.consensusj.airgap.fx.demoapp to javafx.fxml;
+    exports org.consensusj.airgap.fx.demoapp;
+    exports org.consensusj.airgap.fx.camera;
+    exports org.consensusj.airgap.fx.components;
 }
