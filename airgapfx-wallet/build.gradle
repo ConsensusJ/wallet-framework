@@ -67,7 +67,7 @@ javafx {
 //mainClassName = "$moduleName/airgapfxwallet.AirgapFxWalletApp"
 mainClassName = "airgapfxwallet.AirgapFxWalletApp"
 
-def appName = 'NetWallet'
+def appName = 'ConsensusJWallet'
 
 ext.os = org.gradle.internal.os.OperatingSystem.current()
 

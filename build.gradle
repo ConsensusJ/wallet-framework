@@ -27,7 +27,7 @@ allprojects {
     apply plugin: 'java'
 
     version = walletFrameworkVersion     // set in gradle.properties
-    group = 'org.consensusj.supernautfx'
+    group = 'org.consensusj.wallet'
 
     repositories {
         jcenter()
