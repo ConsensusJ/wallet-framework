@@ -22,5 +22,5 @@ jobs:
     - name: Upload jpackage directory as artifact
       uses: actions/upload-artifact@master
       with:
-        name: netwallet-${{ matrix.os }}-jdk${{ matrix.java }}-jpackage
+        name: consensusj-wallet-jdk${{ matrix.java }}-${{ matrix.os }}-jpackage
         path: airgapfx-wallet/build/jpackage
