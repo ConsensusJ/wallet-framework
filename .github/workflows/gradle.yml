@@ -18,9 +18,9 @@ jobs:
       with:
         java-version: ${{ matrix.java }}
     - name: Build with Gradle
-      run: ./gradlew -Ddownload.jpackage=true buildCI airgapfx-wallet:jpackage --info --stacktrace
+      run: ./gradlew -Ddownload.jpackage=true buildCI consensusj-netwallet-fx:jpackage --info --stacktrace
     - name: Upload jpackage directory as artifact
       uses: actions/upload-artifact@master
       with:
         name: consensusj-wallet-jdk${{ matrix.java }}-${{ matrix.os }}-jpackage
-        path: airgapfx-wallet/build/jpackage
+        path: consensusj-netwallet-fx/build/jpackage

@@ -16,7 +16,7 @@ build:
   script:
     - java -version
     - echo Gradle OPTS are $GRADLE_OPTS
-    - ./gradlew -Ddownload.jpackage=true buildCI airgapfx-wallet:jpackage --stacktrace
+    - ./gradlew -Ddownload.jpackage=true buildCI consensusj-netwallet-fx:jpackage --stacktrace
   artifacts:
     paths:
       - airgapfx-wallet/build/jpackage
