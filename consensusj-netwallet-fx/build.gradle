@@ -13,11 +13,6 @@ targetCompatibility = 11
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
 
-//repositories {
-//    maven { url 'https://dl.bintray.com/consensusj/maven' }
-//    maven { url 'https://oss.sonatype.org/content/groups/public' }
-//}
-
 dependencies {
     implementation project(':airgaplib')
     implementation (project(':airgapfx')) {
@@ -61,7 +56,7 @@ patchModules.config = [
 
 javafx {
     version = 13
-    modules = [ 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.swing']
+    modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.fxml', 'javafx.swing']
 }
 
 //mainClassName = "$moduleName/airgapfxwallet.AirgapFxWalletApp"
@@ -82,11 +77,11 @@ jlink {
         requires 'java.logging'
         requires 'java.desktop'
 
-        forceMerge 'org.slf4j'
-
         requires 'javafx.graphics'
         requires 'javafx.controls'
         requires 'javafx.fxml'
+
+        forceMerge 'org.slf4j'
     }
     jpackage {
         // See https://badass-jlink-plugin.beryx.org/releases/latest/#_jpackage for
@@ -96,10 +91,12 @@ jlink {
         }
         skipInstaller = false
 
-        // macOS options
-        imageOptions = ["--verbose", "--resource-dir", "${projectDir}/src/macos/resource-dir", "--app-version", version]
-        installerOptions = ["--app-version", version]
+        // rpmbuild doesn't like '-' characters in version
+        def appVersionForJpackage = os.linux ? version.replace('-', '.') : version
 
+        // macOS options
+        imageOptions = ["--verbose", "--resource-dir", "${projectDir}/src/macos/resource-dir", "--app-version", appVersionForJpackage]
+        installerOptions = ["--app-version", appVersionForJpackage]
     }
 }
 

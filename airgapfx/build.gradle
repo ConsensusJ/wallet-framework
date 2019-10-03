@@ -7,11 +7,6 @@ plugins {
     id 'org.javamodularity.moduleplugin' version "1.5.0"
 }
 
-//repositories {
-//    maven { url 'https://oss.sonatype.org/content/groups/public' }
-//    maven { url 'https://jitpack.io' }
-//}
-
 dependencies {
     implementation project(':airgaplib')
 
