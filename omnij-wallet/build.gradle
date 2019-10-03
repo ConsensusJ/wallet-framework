@@ -14,11 +14,11 @@ version = '0.0.1-SNAPSHOT'
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
 
-repositories {
-    maven { url 'https://dl.bintray.com/consensusj/maven' }
-    maven { url 'https://dl.bintray.com/omni/maven' }           // OmniJ (RPC client)
-    maven { url 'https://oss.sonatype.org/content/groups/public' }
-}
+//repositories {
+//    maven { url 'https://dl.bintray.com/consensusj/maven' }
+//    maven { url 'https://dl.bintray.com/omni/maven' }           // OmniJ (RPC client)
+//    maven { url 'https://oss.sonatype.org/content/groups/public' }
+//}
 
 def omnijVersion = "0.5.8"
 

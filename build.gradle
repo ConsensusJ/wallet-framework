@@ -31,8 +31,10 @@ allprojects {
 
     repositories {
         jcenter()
-        maven { url 'https://jitpack.io' }
         maven { url 'https://dl.bintray.com/msgilligan/maven' } // ConsensusJ (bitcoinj DSL)
+        maven { url 'https://dl.bintray.com/omni/maven' }           // OmniJ (RPC client)
+        maven { url 'https://oss.sonatype.org/content/groups/public' }
+        maven { url 'https://jitpack.io' }
     }
 }
 

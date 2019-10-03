@@ -13,10 +13,10 @@ targetCompatibility = 11
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
 
-repositories {
-    maven { url 'https://dl.bintray.com/consensusj/maven' }
-    maven { url 'https://oss.sonatype.org/content/groups/public' }
-}
+//repositories {
+//    maven { url 'https://dl.bintray.com/consensusj/maven' }
+//    maven { url 'https://oss.sonatype.org/content/groups/public' }
+//}
 
 dependencies {
     implementation project(':airgaplib')
