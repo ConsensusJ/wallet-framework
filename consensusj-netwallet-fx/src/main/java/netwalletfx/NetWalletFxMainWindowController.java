@@ -66,8 +66,8 @@ import java.util.concurrent.Executors;
  * Main window controller for ConsensusJ Network Wallet
  */
 @Singleton
-public class AirgapFxMainWindowController extends WalletMainWindowController {
-    private static final Logger log = LoggerFactory.getLogger(AirgapFxMainWindowController.class);
+public class NetWalletFxMainWindowController extends WalletMainWindowController {
+    private static final Logger log = LoggerFactory.getLogger(NetWalletFxMainWindowController.class);
     @FXML private HBox controlsBox;
     @FXML private Label balance;
     @FXML private Button sendMoneyOutBtn;
@@ -75,14 +75,14 @@ public class AirgapFxMainWindowController extends WalletMainWindowController {
     @FXML private ClickableBitcoinAddress addressControl;
     @FXML private ListView<Transaction> transactionListView;
 
-    protected final AirgapFxWalletApp app;
+    protected final NetWalletFxApp app;
     private AirGapSigner airGapHardwareSigner;
     private final SignedResponseParser signedResponseParser = new SignedResponseParser();
     private final SignedResponseHandler signedResponseHandler = new SignedResponseHandler();
 
     private ExecutorService executorService = Executors.newFixedThreadPool(1);
 
-    public AirgapFxMainWindowController(AirgapFxWalletApp app) {
+    public NetWalletFxMainWindowController(NetWalletFxApp app) {
         super(app);
         this.app = app;
     }

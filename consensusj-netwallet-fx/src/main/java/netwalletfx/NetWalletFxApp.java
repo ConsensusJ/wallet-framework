@@ -38,8 +38,8 @@ import com.github.sarxos.webcam.Webcam;
  * to subclass javafx.application.Application.
  */
 @Singleton
-public class AirgapFxWalletApp extends WalletFxApp {
-    private static final Logger log = LoggerFactory.getLogger(AirgapFxWalletApp.class);
+public class NetWalletFxApp extends WalletFxApp {
+    private static final Logger log = LoggerFactory.getLogger(NetWalletFxApp.class);
     private static final String APP_NAME = "ConsensusJ Wallet";
     private static final String mainFxmlResName = "main.fxml";
     private static final String mainCssResName = "wallet.css";
@@ -50,10 +50,10 @@ public class AirgapFxWalletApp extends WalletFxApp {
     private static final int GET_WEBCAMS_TIMEOUT = 1000;   // Timeout in milliseconds
 
     public static void main(String[] args) {
-        SupernautFxLauncher.superLaunch(AirgapFxWalletApp.class, args);
+        SupernautFxLauncher.superLaunch(NetWalletFxApp.class, args);
     }
 
-    AirgapFxWalletApp(FxmlLoaderFactory loaderFactory) {
+    NetWalletFxApp(FxmlLoaderFactory loaderFactory) {
         super(loaderFactory,
                 TestNet3Params.get(),
                 Script.ScriptType.P2PKH,
@@ -64,7 +64,7 @@ public class AirgapFxWalletApp extends WalletFxApp {
 
     @Override
     public String getAppName() {
-        return AirgapFxWalletApp.APP_NAME;
+        return NetWalletFxApp.APP_NAME;
     }
 
     @Override
