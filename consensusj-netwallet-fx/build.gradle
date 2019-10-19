@@ -59,8 +59,8 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.fxml', 'javafx.swing']
 }
 
-//mainClassName = "$moduleName/airgapfxwallet.AirgapFxWalletApp"
-mainClassName = "netwalletfx.AirgapFxWalletApp"
+//mainClassName = "$moduleName/netwalletfx.NetWalletFxApp"
+mainClassName = "netwalletfx.NetWalletFxApp"
 
 def appName = 'ConsensusJWallet'
 
