@@ -16,6 +16,15 @@
 
 package netwalletfx;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.MoreExecutors;
+import org.bitcoinj.core.SignatureDecodeException;
+import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionBroadcaster;
+import org.bitcoinj.walletfx.WalletSettingsController;
+import org.consensusj.airgap.SignedResponseHandler;
+import org.consensusj.airgap.SignedResponseParser;
 import org.consensusj.airgap.UnsignedTxQrGenerator;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -27,23 +36,49 @@ import org.bitcoinj.walletfx.OverlayableWindowController;
 import org.bitcoinj.walletfx.SendMoneyController;
 import org.bitcoinj.walletfx.utils.QRCodeImages;
 import org.bitcoinj.walletfx.HardwareSigner;
+import org.consensusj.airgap.fx.components.QrCaptureView;
+import org.consensusj.airgap.json.TransactionSignatureResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Incomplete implementation of signing using the Airgap protocol
  * TODO: Get the signed transaction and pass it to the "Send" function
  */
 public class AirGapSigner implements HardwareSigner {
+    private static final Logger log = LoggerFactory.getLogger(AirGapSigner.class);
     private final UnsignedTxQrGenerator qrJsonGenerator;
-    private final OverlayableWindowController windowController;
+    private final NetWalletFxMainWindowController windowController;
+    private final SignedResponseParser signedResponseParser = new SignedResponseParser();
+    private final SignedResponseHandler signedResponseHandler = new SignedResponseHandler();
+    private ExecutorService executorService = Executors.newFixedThreadPool(1);
     private SendRequest pendingSendRequest;
 
-    public AirGapSigner(Wallet wallet, OverlayableWindowController windowController) {
+    public AirGapSigner(Wallet wallet, NetWalletFxMainWindowController windowController) {
         qrJsonGenerator = new UnsignedTxQrGenerator(wallet.getParams(), wallet.getActiveKeyChain());
         this.windowController = windowController;
     }
 
     @Override
     public void displaySigningOverlay(SendRequest sendRequest, SendMoneyController sendMoneyController) {
+        pendingSendRequest = sendRequest;
+        String qrJson = qrJsonGenerator.createSigningRequestString(pendingSendRequest.tx);
+        Image qrImage = QRCodeImages.imageFromString(qrJson, 600, 450);
+
+
+        URL location = AirGapSigner.class.getResource("QrSigningView.fxml");
+        final OverlayableWindowController.OverlayUI<QrSigningViewController> signingViewOverlay = windowController.overlayUI(location);
+        signingViewOverlay.ui.setEffect(new DropShadow());
+        signingViewOverlay.controller.setUnsignedQrImage(qrImage);
+        signingViewOverlay.controller.initCaptureView(windowController.app.cameraService, this::scanListener);
+    }
+
+    public void oldDisplaySigningOverlay(SendRequest sendRequest, SendMoneyController sendMoneyController) {
         pendingSendRequest = sendRequest;
         String qrJson = qrJsonGenerator.createSigningRequestString(pendingSendRequest.tx);
         Image qrImage = QRCodeImages.imageFromString(qrJson, 600, 450);
@@ -61,6 +96,52 @@ public class AirGapSigner implements HardwareSigner {
     @Override
     public String getButtonText() {
         return "Airgap Sign";
+    }
+
+    public void scanListener(String result) {
+        log.info("QR Scan Result {}", result);
+        SendRequest sendRequest = getPendingTransaction();
+
+        TransactionSignatureResponse response = null;
+        try {
+            response = signedResponseParser.parse(result);
+        } catch (IOException e) {
+            // TODO: Handle exception properly
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        try {
+            signedResponseHandler.signWithResponse(sendRequest.tx, response);
+        } catch (SignatureDecodeException e) {
+            e.printStackTrace();
+        }
+
+        executorService.submit(() -> {
+            broadcastTransaction(sendRequest.tx);
+        });
+    }
+
+    private void broadcastTransaction(Transaction transaction) {
+        log.info("Preparing to broadcast tx: {{}", transaction);
+        TransactionBroadcaster broadcaster = windowController.app.getWalletAppKit().peerGroup();
+        var broadcast = broadcaster.broadcastTransaction(transaction);
+        Futures.addCallback(broadcast.future(), new FutureCallback<Transaction>(){
+
+            @Override
+            public void onSuccess(Transaction transaction) {
+                log.info("Broadcast success, committing transaction: {}", transaction);
+                // Commit tx to wallet
+                boolean accepted = windowController.app.getWallet().maybeCommitTx(transaction);
+                if (!accepted) {
+                    log.warn("Transaction already pending");
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                log.error("Broadcast failure", t);
+            }
+        }, MoreExecutors.directExecutor());
     }
 
     public SendRequest getPendingTransaction() {

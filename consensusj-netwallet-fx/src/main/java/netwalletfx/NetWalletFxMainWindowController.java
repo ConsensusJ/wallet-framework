@@ -39,7 +39,6 @@ import javafx.util.Duration;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.SignatureDecodeException;
 import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionBroadcaster;
 import org.bitcoinj.wallet.SendRequest;
 import org.bitcoinj.walletfx.OverlayableWindowController;
 import org.bitcoinj.walletfx.SendMoneyController;
@@ -77,10 +76,8 @@ public class NetWalletFxMainWindowController extends WalletMainWindowController 
 
     protected final NetWalletFxApp app;
     private AirGapSigner airGapHardwareSigner;
-    private final SignedResponseParser signedResponseParser = new SignedResponseParser();
-    private final SignedResponseHandler signedResponseHandler = new SignedResponseHandler();
+    private Stage standaloneQrScanStage;
 
-    private ExecutorService executorService = Executors.newFixedThreadPool(1);
 
     public NetWalletFxMainWindowController(NetWalletFxApp app) {
         super(app);
@@ -133,12 +130,12 @@ public class NetWalletFxMainWindowController extends WalletMainWindowController 
     public void scanClicked(ActionEvent actionEvent) {
         log.info("scanClicked");
 
-        QrCaptureView captureView  = new QrCaptureView(app.cameraService, this::scanListener);
+        QrCaptureView captureView  = new QrCaptureView(app.cameraService, this::scanListener, this::closeListener);
 
         Scene scene = new Scene(captureView);
-        final Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.show();
+        standaloneQrScanStage = new Stage();
+        standaloneQrScanStage.setScene(scene);
+        standaloneQrScanStage.show();
     }
 
     @Override
@@ -164,46 +161,13 @@ public class NetWalletFxMainWindowController extends WalletMainWindowController 
     }
 
     private void scanListener(String result) {
-        log.info("QR Scan Result {}", result);
-        SendRequest sendRequest = airGapHardwareSigner.getPendingTransaction();
-
-        TransactionSignatureResponse response = null;
-        try {
-            response = signedResponseParser.parse(result);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            signedResponseHandler.signWithResponse(sendRequest.tx, response);
-        } catch (SignatureDecodeException e) {
-            e.printStackTrace();
-        }
-
-        executorService.submit(() -> {
-            broadcastTransaction(sendRequest.tx);
-        });
+        airGapHardwareSigner.scanListener(result);
     }
 
-    private void broadcastTransaction(Transaction transaction) {
-        log.info("Preparing to broadcast tx: {{}", transaction);
-        TransactionBroadcaster broadcaster = app.getWalletAppKit().peerGroup();
-        var broadcast = broadcaster.broadcastTransaction(transaction);
-        Futures.addCallback(broadcast.future(), new FutureCallback<Transaction>(){
-
-            @Override
-            public void onSuccess(Transaction transaction) {
-                log.info("Broadcast success, committing transaction: {}", transaction);
-                // Commit tx to wallet
-                boolean accepted = app.getWallet().maybeCommitTx(transaction);
-                if (!accepted) {
-                    log.warn("Transaction already pending");
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                log.error("Broadcast failure", t);
-            }
-        }, MoreExecutors.directExecutor());
+    private void closeListener(Object unused) {
+        if (standaloneQrScanStage != null) {
+            standaloneQrScanStage.hide();
+        }
     }
+
 }

@@ -26,7 +26,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +36,8 @@ import java.util.function.Consumer;
  */
 public class QrCaptureView extends BorderPane {
     private static final Logger log = LoggerFactory.getLogger(QrCaptureView.class);
-    private final Consumer<String> listener;
+    private final Consumer<String> scanListener;
+    private final Consumer<Object> closeListener;
     private final CameraView cameraView;
     private final CameraService service;
     private TextArea previewText;
@@ -47,10 +47,11 @@ public class QrCaptureView extends BorderPane {
 
     private String previewResult;
     
-    public QrCaptureView(CameraService cameraService,  Consumer<String> listener) {
+    public QrCaptureView(CameraService cameraService,  Consumer<String> scanListener, Consumer<Object> closeListener) {
         service = cameraService;
         cameraView = new CameraView(cameraService);
-        this.listener = listener;
+        this.scanListener = scanListener;
+        this.closeListener = closeListener;
 
         setCenter(cameraView);
 
@@ -94,15 +95,12 @@ public class QrCaptureView extends BorderPane {
     }
 
     private void acceptAction(ActionEvent actionEvent) {
-        listener.accept(previewResult);
-        closeParentWindow();
+        scanListener.accept(previewResult);
+        closeParent();
     }
 
     private void cancelAction(ActionEvent actionEvent) {
-        if (service.isRunning()) {
-            service.cancel();
-        }
-        closeParentWindow();
+        closeParent();
     }
 
     private void rescanAction(ActionEvent e) {
@@ -131,11 +129,15 @@ public class QrCaptureView extends BorderPane {
         rescanButton.setDisable(true);
     }
 
-    private void closeParentWindow() {
-        Window stage = this.getScene().getWindow();
-        if (stage != null) {
-            stage.hide();
+    private void stopCameraService() {
+        if (service.isRunning()) {
+            service.cancel();
         }
+    }
+
+    private void closeParent() {
+        stopCameraService();
+        closeListener.accept(null);
     }
 
 }
