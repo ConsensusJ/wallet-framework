@@ -1,9 +1,8 @@
 plugins {
     id 'groovy'
     id 'application'
-    id 'org.openjfx.javafxplugin'           version '0.0.8'
+    id 'org.openjfx.javafxplugin'           version '0.0.9'
     id 'org.beryx.jlink'                    version '2.16.2'
-    id 'org.javamodularity.moduleplugin'    version "1.5.0"
 }
 
 sourceCompatibility = 11
