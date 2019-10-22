@@ -55,7 +55,7 @@ patchModules.config = [
 ]
 
 javafx {
-    version = 13
+    version = '13.0.1'
     modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.fxml', 'javafx.swing']
 }
 
