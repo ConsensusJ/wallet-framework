@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="700.0" maxWidth="1100.0" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="netwalletfx.QrSigningViewController">
+<AnchorPane maxHeight="650.0" maxWidth="1050.0" prefHeight="650.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="netwalletfx.QrSigningViewController">
    <children>
       <HBox layoutX="99.0" layoutY="60.0" minHeight="500.0" minWidth="1200.0" prefHeight="600.0" prefWidth="1300.0" style="-fx-background-color: white;" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
          <children>

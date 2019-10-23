@@ -31,6 +31,7 @@ public class QrSigningViewController implements OverlayWindowController {
     }
 
     public void initCaptureView(CameraService cameraService, Consumer<String> scanListener) {
+        // TODO: Make sure to gracefully handle case (e.g. inform user) where there is no camera
         captureView  = new QrCaptureView(cameraService, scanListener, this::closeListener);
         if (captureBox != null) {
             captureBox.getChildren().add(captureView);

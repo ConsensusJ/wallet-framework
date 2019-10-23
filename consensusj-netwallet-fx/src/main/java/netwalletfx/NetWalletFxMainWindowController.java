@@ -16,13 +16,7 @@
 
 package netwalletfx;
 
-import org.consensusj.airgap.SignedResponseHandler;
-import org.consensusj.airgap.SignedResponseParser;
 import org.consensusj.airgap.fx.components.QrCaptureView;
-import org.consensusj.airgap.json.TransactionSignatureResponse;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.MoreExecutors;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
@@ -37,9 +31,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.SignatureDecodeException;
 import org.bitcoinj.core.Transaction;
-import org.bitcoinj.wallet.SendRequest;
 import org.bitcoinj.walletfx.OverlayableWindowController;
 import org.bitcoinj.walletfx.SendMoneyController;
 import org.bitcoinj.walletfx.WalletMainWindowController;
@@ -55,10 +47,6 @@ import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 
 /**
@@ -97,9 +85,7 @@ public class NetWalletFxMainWindowController extends WalletMainWindowController 
         balance.textProperty().bind(createBalanceStringBinding(model.balanceProperty()));
         // Don't let the user click send money when the wallet is empty.
         sendMoneyOutBtn.disableProperty().bind(model.balanceProperty().isEqualTo(Coin.ZERO));
-        // Don't let the user click the "scan QR" button if there is no camera
-        var cameraAvailable = app.cameraService != null;
-        scanBtn.setDisable(!cameraAvailable);
+
         // We wait to onBitcoinSetup() to do this because prior to that getWallet() will return null.
         TransactionStringConverter converter = new TransactionStringConverter(this.app.getWallet());
         transactionListView.setCellFactory(list -> {
