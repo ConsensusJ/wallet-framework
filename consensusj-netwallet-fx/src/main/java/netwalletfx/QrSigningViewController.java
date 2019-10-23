@@ -27,7 +27,6 @@ public class QrSigningViewController implements OverlayWindowController {
     public void setUnsignedQrImage(Image image) {
         if (unsignedQrImage != null) {
             unsignedQrImage.setImage(image);
-            unsignedQrImage.setEffect(new DropShadow());
         }
     }
 

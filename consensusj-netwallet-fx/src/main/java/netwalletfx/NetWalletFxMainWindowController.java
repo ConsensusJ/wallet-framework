@@ -70,7 +70,6 @@ public class NetWalletFxMainWindowController extends WalletMainWindowController 
     @FXML private HBox controlsBox;
     @FXML private Label balance;
     @FXML private Button sendMoneyOutBtn;
-    @FXML private Button scanBtn;
     @FXML private ClickableBitcoinAddress addressControl;
     @FXML private ListView<Transaction> transactionListView;
 
@@ -126,10 +125,10 @@ public class NetWalletFxMainWindowController extends WalletMainWindowController 
         screen.controller.initialize(null);
     }
 
-    @FXML
-    public void scanClicked(ActionEvent actionEvent) {
-        log.info("scanClicked");
-
+    /**
+     * Display old standalone QR capture window
+     */
+    public void displayCaptureWindow() {
         QrCaptureView captureView  = new QrCaptureView(app.cameraService, this::scanListener, this::closeListener);
 
         Scene scene = new Scene(captureView);
