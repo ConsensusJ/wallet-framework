@@ -22,6 +22,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import org.bitcoinj.core.SignatureDecodeException;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionBroadcaster;
+import org.bitcoinj.script.Script;
 import org.bitcoinj.walletfx.WalletSettingsController;
 import org.consensusj.airgap.SignedResponseHandler;
 import org.consensusj.airgap.SignedResponseParser;
@@ -55,12 +56,13 @@ public class AirGapSigner implements HardwareSigner {
     private final UnsignedTxQrGenerator qrJsonGenerator;
     private final NetWalletFxMainWindowController windowController;
     private final SignedResponseParser signedResponseParser = new SignedResponseParser();
-    private final SignedResponseHandler signedResponseHandler = new SignedResponseHandler();
+    private final SignedResponseHandler signedResponseHandler;
     private ExecutorService executorService = Executors.newFixedThreadPool(1);
     private SendRequest pendingSendRequest;
 
     public AirGapSigner(Wallet wallet, NetWalletFxMainWindowController windowController) {
         qrJsonGenerator = new UnsignedTxQrGenerator(wallet.getParams(), wallet.getActiveKeyChain());
+        signedResponseHandler = new SignedResponseHandler(wallet.getParams(), Script.ScriptType.P2PKH);
         this.windowController = windowController;
     }
 

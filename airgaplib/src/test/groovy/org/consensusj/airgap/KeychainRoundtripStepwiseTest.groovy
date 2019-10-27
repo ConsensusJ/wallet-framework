@@ -1,8 +1,7 @@
 package org.consensusj.airgap
 
-
+import org.bitcoinj.core.Address
 import org.bitcoinj.core.Coin
-import org.bitcoinj.core.LegacyAddress
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.core.TransactionOutput
 import org.bitcoinj.crypto.ChildNumber
@@ -42,7 +41,7 @@ class KeychainRoundtripStepwiseTest extends DeterministicKeychainBaseSpec  {
     @Shared TransactionSignatureResponse response
     @Shared Transaction transaction
     @Shared DeterministicKey fromKey
-    @Shared LegacyAddress fromAddr
+    @Shared Address fromAddr
 
     def "SIGNING wallet can create an xpub string from signing keychain"() {
         expect: "Test setup provides a DeterministicKeyChain initialized with the Panda Diary seed"
@@ -73,30 +72,30 @@ class KeychainRoundtripStepwiseTest extends DeterministicKeychainBaseSpec  {
         networkKeyChain = DeterministicKeyChain.builder().watch(key).outputScriptType(outputScriptType).build()
 
         and: "we fetch the keys that are used in later steps"
-        DeterministicKey fromKey = networkKeyChain.getKeyByPath(HDPath.of(networkAccountPath).extend(fromKeyPath), true)
-        DeterministicKey toKey = networkKeyChain.getKeyByPath(HDPath.of(networkAccountPath).extend(toKeyPath), true)
-        DeterministicKey changeKey = networkKeyChain.getKeyByPath(HDPath.of(networkAccountPath).extend(changeKeyPath), true)
+        DeterministicKey fromKey = networkKeyChain.getKeyByPath(HDPath.M(networkAccountPath).extend(fromKeyPath), true)
+        DeterministicKey toKey = networkKeyChain.getKeyByPath(HDPath.M(networkAccountPath).extend(toKeyPath), true)
+        DeterministicKey changeKey = networkKeyChain.getKeyByPath(HDPath.M(networkAccountPath).extend(changeKeyPath), true)
 
         then: "the pubkeys in the network keychain match the pubkeys in the signing keychain"
         networkKeyChain != null
         networkKeyChain.isWatching()
-        fromKey.getPubKey() == signingKeychain.getKeyByPath(HDPath.of(signingAccountPath).extend(fromKeyPath), false).getPubKey()
-        toKey.getPubKey() == signingKeychain.getKeyByPath(HDPath.of(signingAccountPath).extend(toKeyPath), false).getPubKey()
-        changeKey.getPubKey() == signingKeychain.getKeyByPath(HDPath.of(signingAccountPath).extend(changeKeyPath), false).getPubKey()
+        fromKey.getPubKey() == signingKeychain.getKeyByPath(HDPath.m(signingAccountPath).extend(fromKeyPath), false).getPubKey()
+        toKey.getPubKey() == signingKeychain.getKeyByPath(HDPath.m(signingAccountPath).extend(toKeyPath), false).getPubKey()
+        changeKey.getPubKey() == signingKeychain.getKeyByPath(HDPath.m(signingAccountPath).extend(changeKeyPath), false).getPubKey()
     }
 
     def "NETWORK wallet can create a transaction and serialize a JSON signing request "() {
         given: "a transaction with a UTXO in output 1"
         // This is actually the first transaction received by the
         // 0'th change address in our "panda diary" keychain.
-        fromKey = networkKeyChain.getKeyByPath(HDPath.of(networkAccountPath).extend(fromKeyPath), false)
+        fromKey = networkKeyChain.getKeyByPath(HDPath.M(networkAccountPath).extend(fromKeyPath), false)
         fromAddr = addressFromKey(fromKey)
         Transaction utxo_tx = firstChangeTransaction()
         TransactionOutput utxo = utxo_tx.getOutput(1)
 
         when: "we build a 1-input, 2-output (unsigned) transaction to spend the UTXO"
-        LegacyAddress toAddr = addressFromKey(networkKeyChain.getKeyByPath(HDPath.of(networkAccountPath).extend(toKeyPath), false))
-        LegacyAddress changeAddr = addressFromKey(networkKeyChain.getKeyByPath(HDPath.of(networkAccountPath).extend(changeKeyPath), false))
+        Address toAddr = addressFromKey(networkKeyChain.getKeyByPath(HDPath.M(networkAccountPath).extend(toKeyPath), false))
+        Address changeAddr = addressFromKey(networkKeyChain.getKeyByPath(HDPath.M(networkAccountPath).extend(changeKeyPath), false))
         Coin txAmount = 0.01.btc
         Coin changeAmount = 0.20990147.btc
         transaction = buildTestTransaction(fromKey, utxo, toAddr, changeAddr, txAmount, changeAmount)
@@ -146,7 +145,7 @@ class KeychainRoundtripStepwiseTest extends DeterministicKeychainBaseSpec  {
 
     def "NETWORK wallet can sign and verify a transaction using the signature from the JSON"() {
         given:
-        def responseHandler = new SignedResponseHandler()
+        def responseHandler = new SignedResponseHandler(netParams, outputScriptType)
 
         when: "we use the signature and pubKey from the response to sign the input"
         responseHandler.signWithResponse(transaction, response)

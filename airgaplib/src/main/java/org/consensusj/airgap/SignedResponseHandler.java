@@ -4,13 +4,11 @@ import org.consensusj.airgap.json.InputSignature;
 import org.consensusj.airgap.json.TransactionSignatureResponse;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.LegacyAddress;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.SignatureDecodeException;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.crypto.TransactionSignature;
-import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptBuilder;
 import org.bitcoinj.script.ScriptException;
@@ -25,8 +23,14 @@ import java.util.List;
  */
 public class SignedResponseHandler {
     private static final Logger log = LoggerFactory.getLogger(SignedResponseHandler.class);
-    private final NetworkParameters netParams = TestNet3Params.get();
+    private final Script.ScriptType scriptType;
+    private final NetworkParameters netParams;
     private final boolean verify = true;
+
+    public SignedResponseHandler(NetworkParameters netParams, Script.ScriptType scriptType) {
+        this.netParams = netParams;
+        this.scriptType = scriptType;
+    }
 
     public void signWithResponse(Transaction transaction, TransactionSignatureResponse response) throws SignatureDecodeException {
         List<InputSignature> inputSignatures = response.getTransaction().getInputSignatures();
@@ -36,7 +40,7 @@ public class SignedResponseHandler {
             ECKey pubKey = pubKeyFromString(inputSig.getEcPublicKey());
             this.signInput(transaction.getInput(inputIndex), signature, pubKey);
             if (verify) {
-                correctlySpendsInput(transaction, inputIndex, LegacyAddress.fromKey(netParams, pubKey));
+                correctlySpendsInput(transaction, inputIndex, Address.fromKey(netParams, pubKey, scriptType));
             }
             inputIndex++;
         }
@@ -79,7 +83,7 @@ public class SignedResponseHandler {
      * @param fromAddr The address we are trying to spend funds from
      * @throws ScriptException If {@code scriptSig#correctlySpends} fails with exception
      */
-    protected static void correctlySpendsInput(Transaction tx, int inputIndex, Address fromAddr) throws ScriptException {
+     static void correctlySpendsInput(Transaction tx, int inputIndex, Address fromAddr) throws ScriptException {
         log.info("About to validate signed input {} of transaction {}", inputIndex, tx.getTxId().toString());
         Script scriptSig = tx.getInputs().get(inputIndex).getScriptSig();
         Script scriptPubKey = ScriptBuilder.createOutputScript(fromAddr);

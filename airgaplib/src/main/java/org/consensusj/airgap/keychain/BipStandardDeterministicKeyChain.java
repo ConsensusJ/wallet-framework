@@ -1,7 +1,7 @@
 package org.consensusj.airgap.keychain;
 
+import org.bitcoinj.core.Address;
 import org.consensusj.airgap.BipStandardKeyChainGroupStructure;
-import org.bitcoinj.core.LegacyAddress;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.DeterministicKey;
@@ -22,6 +22,7 @@ public class BipStandardDeterministicKeyChain extends DeterministicKeyChain {
     private static final BipStandardKeyChainGroupStructure bip44KeyChainGroupStructure = new BipStandardKeyChainGroupStructure(TestNet3Params.get());
 
     private final NetworkParameters netParams = TestNet3Params.get();
+    private final Script.ScriptType outputScriptType;
     private final HDPath pathAccount;
     private final HDPath pathReceiving;
     private final HDPath pathChange;
@@ -36,12 +37,13 @@ public class BipStandardDeterministicKeyChain extends DeterministicKeyChain {
      */
     public BipStandardDeterministicKeyChain(DeterministicSeed seed, Script.ScriptType outputScriptType, int accountIndex) {
         super(seed, null, outputScriptType, bip44KeyChainGroupStructure.accountHDPathFor(outputScriptType, accountIndex));
+        this.outputScriptType = outputScriptType;
         pathAccount = bip44KeyChainGroupStructure.accountHDPathFor(outputScriptType, accountIndex);
         pathReceiving = pathAccount.extend(BipStandardKeyChainGroupStructure.CHANGE_RECEIVING);
         pathChange = pathAccount.extend(BipStandardKeyChainGroupStructure.CHANGE_CHANGE);
     }
     
-    public LegacyAddress receivingAddr(int index) {
+    public Address receivingAddr(int index) {
         HDPath indexPath = pathReceiving.extend(new ChildNumber(index));
         return address(indexPath);
     }
@@ -50,7 +52,7 @@ public class BipStandardDeterministicKeyChain extends DeterministicKeyChain {
         return key(pathReceiving.extend(new ChildNumber(index)));
     }
 
-    public LegacyAddress changeAddr(int index) {
+    public Address changeAddr(int index) {
         HDPath indexPath = pathChange.extend(new ChildNumber(index));
         return address(indexPath);
     }
@@ -63,8 +65,8 @@ public class BipStandardDeterministicKeyChain extends DeterministicKeyChain {
         return getKeyByPath(indexPath,true);
     }
 
-    public LegacyAddress address(HDPath indexPath) {
+    public Address address(HDPath indexPath) {
         DeterministicKey key = key(indexPath);
-        return LegacyAddress.fromKey(netParams, key);
+        return Address.fromKey(netParams, key, outputScriptType);
     }
 }
