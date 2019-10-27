@@ -1,0 +1,147 @@
+plugins {
+    id 'groovy'
+    id 'application'
+    id 'org.openjfx.javafxplugin'           version '0.0.8'
+    id 'org.beryx.jlink'                    version '2.16.2'
+    id 'org.javamodularity.moduleplugin'    version "1.5.0"
+    id "de.undercouch.download"             version "4.0.0"
+}
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
+dependencies {
+    implementation project(':airgaplib')
+    implementation (project(':airgapfx')) {
+        exclude group: 'org.openjfx'
+    }
+
+    implementation ("org.consensusj.supernaut:supernautfx:${supernautVersion}")  {
+        exclude group: 'org.openjfx'
+    }
+
+
+    implementation "${bitcoinjGroup}:${bitcoinjArtifact}:${bitcoinjVersion}"
+    implementation ("${bitcoinjGroup}:${bitcoinjWalletFxArtifact}:${bitcoinjVersion}") {
+        exclude group: 'org.openjfx'    
+    }
+
+    implementation "io.micronaut:micronaut-inject-java:${micronautVersion}"
+    implementation "javax.inject:javax.inject:1"
+
+    implementation 'com.google.guava:guava:27.1-android'
+    implementation 'de.jensd:fontawesomefx:8.0.0'
+
+    implementation 'com.google.zxing:core:3.4.0'
+    implementation 'com.google.zxing:javase:3.4.0'
+
+    implementation ("com.github.sarxos:webcam-capture:0.3.12") {
+        exclude group: 'com.nativelibs4java', module: 'bridj'
+    }
+
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    implementation "org.slf4j:slf4j-jdk14:${slf4jVersion}"
+
+    annotationProcessor "io.micronaut:micronaut-inject-java:${micronautVersion}"
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+patchModules.config = [
+        "java.annotation=jsr305-3.0.2.jar"
+]
+
+javafx {
+    version = javaFxVersion
+    modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.fxml', 'javafx.swing']
+}
+
+//mainClassName = "$moduleName/signwalletfx.SignWalletFxApp"
+mainClassName = "signwalletfx.SignWalletFxApp"
+
+def appName = 'ConsensusJSigningWallet'
+
+ext.os = org.gradle.internal.os.OperatingSystem.current()
+
+jlink {
+    addExtraDependencies("javafx")
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    launcher {
+        name = appName
+        jvmArgs = []
+    }
+    mergedModule {
+        requires 'java.logging'
+        requires 'java.desktop'
+
+        requires 'javafx.graphics'
+        requires 'javafx.controls'
+        requires 'javafx.fxml'
+
+        forceMerge 'org.slf4j'
+    }
+    jpackage {
+        // See https://badass-jlink-plugin.beryx.org/releases/latest/#_jpackage for
+        // where the plugin's jpackage task finds the path to the jpackage tool by default
+        if (Boolean.getBoolean('download.jpackage')) {
+            jpackageHome = downloadJPackage()
+        }
+        skipInstaller = false
+
+        // rpmbuild doesn't like '-' characters in version
+        def appVersionForJpackage = os.linux ? version.replace('-', '.') : version
+
+        // macOS options
+        imageOptions = ["--verbose", "--resource-dir", "${projectDir}/src/macos/resource-dir", "--app-version", appVersionForJpackage]
+        installerOptions = ["--app-version", appVersionForJpackage]
+    }
+}
+
+// #### The code below is needed only if you use the downloadJPackage() method to install the jpackage tool ####
+// Code copied from build.gradle in https://github.com/beryx/fxgl-sliding-puzzle/
+
+/** @return  [url, extension, directory] */
+String[] getJPackageCoordinates() {
+    def jpackageBaseUrl = 'https://s3-us-west-2.amazonaws.com/static.msgilligan.com/jpackage'
+    def jpackageVersionString = 'openjdk-14-jpackage%2B1-49'
+
+    if(os.macOsX) return [
+            "${jpackageBaseUrl}/${jpackageVersionString}_osx-x64_bin.tar.gz",
+            'tar.gz',
+            'jdk-14.jdk/Contents/Home'
+    ]
+    if(os.windows) return [
+            "${jpackageBaseUrl}/${jpackageVersionString}_windows-x64_bin.zip",
+            'zip',
+            'jdk-14'
+    ]
+    return [
+            "${jpackageBaseUrl}/${jpackageVersionString}_linux-x64_bin.tar.gz",
+            'tar.gz',
+            'jdk-14'
+    ]
+}
+
+String downloadJPackage() {
+    def (url, extension, directory) = getJPackageCoordinates()
+    def downloadDir = "$buildDir/download"
+    tasks.jpackageImage.doFirst {
+        def execExt = os.windows ? '.exe' : ''
+        if(!file("$downloadDir/$directory/bin/jpackage$execExt").file) {
+            def jdkArchivePath = "$downloadDir/jdk-jpackage.$extension"
+            download {
+                src url
+                dest jdkArchivePath
+                overwrite false
+            }
+            copy {
+                from ((extension == 'tar.gz') ? tarTree(resources.gzip(jdkArchivePath)) : zipTree(jdkArchivePath))
+                into downloadDir
+            }
+        }
+    }
+    return "$downloadDir/$directory"
+}

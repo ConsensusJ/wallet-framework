@@ -16,7 +16,6 @@
 
 package org.consensusj.airgap.fx.demoapp;
 
-import javafx.stage.Window;
 import org.consensusj.airgap.fx.camera.CameraService;
 import org.consensusj.airgap.fx.components.QrCaptureView;
 import com.github.sarxos.webcam.Webcam;

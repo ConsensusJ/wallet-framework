@@ -44,7 +44,7 @@ class KeychainRoundtripStepwiseTest extends DeterministicKeychainBaseSpec  {
     @Shared DeterministicKey fromKey
     @Shared LegacyAddress fromAddr
 
-    def "Can create an xpub string from signing keychain"() {
+    def "SIGNING wallet can create an xpub string from signing keychain"() {
         expect: "Test setup provides a DeterministicKeyChain initialized with the Panda Diary seed"
         signingKeychain != null
 
@@ -62,7 +62,7 @@ class KeychainRoundtripStepwiseTest extends DeterministicKeychainBaseSpec  {
         xpub == "tpubDDpSwdfCsfnYP8SH7YZvu1LK3BUMr3RQruCKTkKdtnHy2iBNJWn1CYvLwgskZxVNBV4KhicZ4FfgFCGjTwo4ATqdwoQcb5UjJ6ejaey5Ff8"
     }
 
-    def "Can create a network keychain from the xpub"() {
+    def "NETWORK wallet can create a network keychain from the xpub"() {
         when: "we create a network keychain from the xpub"
         DeterministicKey key = DeterministicKey.deserializeB58(xpub, netParams)
         key.creationTimeSeconds = xpubCreationInstant.epochSecond
@@ -111,7 +111,7 @@ class KeychainRoundtripStepwiseTest extends DeterministicKeychainBaseSpec  {
         // TODO: More checks
     }
 
-    def "AIRGAP wallet can use the signing request JSON to generate a signed response"() {
+    def "SIGNING wallet can use the signing request JSON to generate a signed response"() {
         given: "An Airgap transaction signer object "
         // (same basic functionality as an airgap device/wallet)
         AirGapTransactionSigner signer = new AirGapTransactionSigner(signingKeychain)

@@ -46,7 +46,14 @@ public class QrCaptureView extends BorderPane {
     private Button acceptButton;
 
     private String previewResult;
-    
+
+    /**
+     * JavaFX View with UI for a WebCam-based QR Code Scanner
+     * 
+     * @param cameraService QR Code Capturing Camera Service
+     * @param scanListener Listener called when QR code is accepted (accept button)
+     * @param closeListener Listener called when view is closed (cancel or accept button)
+     */
     public QrCaptureView(CameraService cameraService,  Consumer<String> scanListener, Consumer<Object> closeListener) {
         service = cameraService;
         cameraView = new CameraView(cameraService);
