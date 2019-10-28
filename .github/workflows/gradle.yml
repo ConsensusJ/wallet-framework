@@ -18,7 +18,6 @@ jobs:
       with:
         java-version: ${{ matrix.java }}
     - name: Build with Gradle
-      # for some reason the Windows build can no longer parse -Ddownload.jpackage=true 
       run: ./gradlew -Ddownload.jpackage=true buildCI consensusj-netwallet-fx:jpackage --info --stacktrace
     - name: Upload jpackage directory as artifact
       uses: actions/upload-artifact@master
