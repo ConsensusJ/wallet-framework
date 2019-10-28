@@ -7,8 +7,8 @@ plugins {
     id "de.undercouch.download"             version "4.0.0"
 }
 
-sourceCompatibility = 11
-targetCompatibility = 11
+sourceCompatibility = 9
+targetCompatibility = 9
 
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'

@@ -34,6 +34,7 @@ import javafx.scene.image.WritableImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.util.function.Consumer;
 
@@ -57,7 +58,7 @@ public class CameraService extends Service<Image> {
         camera.setViewSize(resolution.getSize());
         if (logViewSizes) {
             log.info("Camera supports the following sizes:");
-            for (var size : camera.getViewSizes()) {
+            for (Dimension size : camera.getViewSizes()) {
                 log.info(size.toString());
             }
         }
