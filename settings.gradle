@@ -5,5 +5,5 @@ plugins {
 include 'airgaplib'
 include 'airgapfx'
 include 'consensusj-netwallet-fx'
-include 'omnij-wallet'
+//include 'omnij-wallet'
 
