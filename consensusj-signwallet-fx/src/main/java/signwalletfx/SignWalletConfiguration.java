@@ -5,18 +5,18 @@ import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.KeyChain;
 import org.bitcoinj.wallet.UnreadableWalletException;
 import org.consensusj.airgap.AirGapTransactionSigner;
-import org.consensusj.airgap.json.TransactionSignatureResponse;
-import org.consensusj.airgap.json.TransactionSigningRequest;
 import org.consensusj.airgap.keychain.BipStandardDeterministicKeyChain;
 
+import javax.inject.Singleton;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 
 /**
- *
+ * Hardcoded configuration using a well-known test seed.
  */
-public class DeterministicKeychainSigner {
+@Singleton
+public class SignWalletConfiguration {
     private final String mnemonicString = "panda diary marriage suffer basic glare surge auto scissors describe sell unique";
     private final Instant creationInstant = LocalDate.of(2019, 4, 10).atStartOfDay().toInstant(ZoneOffset.UTC);
     private final int signingAccountIndex = 0;
@@ -25,7 +25,7 @@ public class DeterministicKeychainSigner {
     private final BipStandardDeterministicKeyChain signingKeychain;
     private final AirGapTransactionSigner signer;
 
-    public DeterministicKeychainSigner() throws UnreadableWalletException {
+    public SignWalletConfiguration() throws UnreadableWalletException {
         DeterministicSeed seed =  new DeterministicSeed(mnemonicString, null, "", creationInstant.getEpochSecond());
         signingKeychain = new BipStandardDeterministicKeyChain(seed, outputScriptType, signingAccountIndex);
         // We need to create some leaf keys in the HD keychain so that they can be found for verifying transactions
@@ -34,14 +34,7 @@ public class DeterministicKeychainSigner {
         signer = new AirGapTransactionSigner(signingKeychain);
     }
 
-    public TransactionSignatureResponse sign(TransactionSigningRequest request) {
-        return signer.signatureResponseFromSigningRequest(request);
-    }
-
-    public String sign(String requestJsonString) {
-        TransactionSigningRequest request = signer.parseSigningRequestJson(requestJsonString);
-        TransactionSignatureResponse response = sign(request);
-        return signer.serializeResponse(response);
+    public AirGapTransactionSigner getSigner() {
+        return signer;
     }
 }
-

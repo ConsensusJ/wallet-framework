@@ -98,6 +98,18 @@ public class AirGapTransactionSigner {
     }
 
     /**
+     * Create a signature response Json string (without display or confirmation) for a signing request Json string
+     *
+     * @param requestJsonString Request Json string
+     * @return Signed response Json string
+     */
+    public String signatureResponseFromSigningRequestJson(String requestJsonString) {
+        TransactionSigningRequest request = parseSigningRequestJson(requestJsonString);
+        TransactionSignatureResponse response = signatureResponseFromSigningRequest(request);
+        return serializeResponse(response);
+    }
+
+    /**
      * Create an {@code InputSignature} for transaction input
      *
      * @param txInput An input from a correctly signed bitcoinj transaction
@@ -144,4 +156,6 @@ public class AirGapTransactionSigner {
         }
         return tx;
     }
+
+
 }

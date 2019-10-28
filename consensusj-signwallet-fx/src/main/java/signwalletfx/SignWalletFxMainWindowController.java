@@ -24,21 +24,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import org.bitcoinj.wallet.UnreadableWalletException;
-import org.bitcoinj.walletfx.controls.NotificationBarPane;
 import org.bitcoinj.walletfx.utils.QRCodeImages;
-import org.bitcoinj.walletfx.utils.TextFieldValidator;
+import org.consensusj.airgap.AirGapTransactionSigner;
 import org.consensusj.airgap.fx.components.QrCaptureView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
- *
+ * Main window controller for Java FX signing wallet application
  */
 @Singleton
 public class SignWalletFxMainWindowController {
@@ -48,12 +43,30 @@ public class SignWalletFxMainWindowController {
 
     private final SignWalletFxApp app;
     private Stage standaloneQrScanStage;
-    private DeterministicKeychainSigner deterministicKeychainSigner;
+    private AirGapTransactionSigner signer;
 
 
-    public SignWalletFxMainWindowController(SignWalletFxApp app) throws UnreadableWalletException {
+    /**
+     * Temporary constructor until SuperautFX has better configuration options
+     *
+     * @param app The Application main class
+     * @param configuration A configuration object containing an AirGapTransactionSigner
+     * @deprecated With proper Micronaut configuration support in SupernautFX, signer can be directly injected.
+     */
+    @Deprecated
+    public SignWalletFxMainWindowController(SignWalletFxApp app, SignWalletConfiguration configuration) {
+        this(app, configuration.getSigner());
+    }
+
+    /**
+     * Preferred constructor in the future.
+     *
+     * @param app The Application main class
+     * @param signer An airgap signer configured with a DeterministicKeychain
+     */
+    public SignWalletFxMainWindowController(SignWalletFxApp app, AirGapTransactionSigner signer) {
         this.app = app;
-        deterministicKeychainSigner = new DeterministicKeychainSigner();
+        this.signer = signer;
     }
 
     // Called by FXMLLoader.
@@ -84,7 +97,7 @@ public class SignWalletFxMainWindowController {
     }
 
     private void scanListener(String signingRequestJsonString) {
-        String signedTxQrString = deterministicKeychainSigner.sign(signingRequestJsonString);
+        String signedTxQrString = signer.signatureResponseFromSigningRequestJson(signingRequestJsonString);
         Image qrImage = QRCodeImages.imageFromString(signedTxQrString, 600, 450);
         signedTxImageView.setImage(qrImage);
     }

@@ -5,10 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import org.bitcoinj.walletfx.WalletMainWindowController;
 import org.consensusj.airgap.fx.camera.CameraService;
-import org.consensusj.airgap.fx.components.QrCaptureView;
-import org.consensusj.airgap.fx.demoapp.DemoQRScannerApplication;
 import org.consensusj.supernautfx.FxmlLoaderFactory;
 import org.consensusj.supernautfx.SupernautFxApp;
 import org.consensusj.supernautfx.SupernautFxLauncher;
@@ -55,7 +52,6 @@ public class SignWalletFxApp implements SupernautFxApp {
         if (camera != null) {
             cameraService = new CameraService(camera);
         }
-
     }
 
     @Override
@@ -83,18 +79,7 @@ public class SignWalletFxApp implements SupernautFxApp {
     public FxmlLoaderFactory getFxmlLoaderFactory() {
         return loaderFactory;
     }
-
-
-    private void scanListener(String result) {
-        System.out.println("Result: " + result);
-    }
-
-    private void closeListener(Object result) {
-        if (primaryStage != null) {
-            primaryStage.hide();
-        }
-    }
-
+    
     public static void main(String[] args) {
         SupernautFxLauncher.superLaunch(SignWalletFxApp.class, args);
     }
