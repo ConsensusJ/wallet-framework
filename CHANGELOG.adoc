@@ -3,9 +3,18 @@
 
 A high-level view of the changes in each wallet-framework binary release.
 
-== v0.1.6-SNAPSHOT
+== v0.1.7
 
-Released: Not yet
+Released: 2019.10.28
+
+* `airgaplib` now is JDK 8+ with automatic module name
+
+== v0.1.6
+
+Released: 2019.10.28
+
+* Libraries published to Bintray
+* Other changes, to be documented
 
 == v0.1.5
 
