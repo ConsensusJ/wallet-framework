@@ -6,8 +6,6 @@ plugins {
     id 'eclipse'
 }
 
-def jacksonVersion = '2.9.8'
-
 /**
  * Java 8 compatibility for use on Android
  */
@@ -29,9 +27,9 @@ dependencies {
 ext.moduleName = 'org.consensusj.airgap'
 
 jar {
-    inputs.property("moduleName", moduleName)
+    inputs.property('moduleName', moduleName)
     manifest {
         attributes  'Automatic-Module-Name': moduleName,
-                'Implementation-Version': version
+                'Implementation-Version': archiveVersion
     }
 }
