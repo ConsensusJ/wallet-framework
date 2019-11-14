@@ -4,7 +4,6 @@ plugins {
     id 'org.openjfx.javafxplugin'           version '0.0.8'
     id 'org.beryx.jlink'                    version '2.16.2'
     id 'org.javamodularity.moduleplugin'    version "1.5.0"
-    id "de.undercouch.download"             version "4.0.0"
 }
 
 sourceCompatibility = 9
@@ -64,8 +63,6 @@ mainClassName = "signwalletfx.SignWalletFxApp"
 
 def appName = 'ConsensusJSigningWallet'
 
-ext.os = org.gradle.internal.os.OperatingSystem.current()
-
 jlink {
     addExtraDependencies("javafx")
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
@@ -87,12 +84,13 @@ jlink {
         // See https://badass-jlink-plugin.beryx.org/releases/latest/#_jpackage for
         // where the plugin's jpackage task finds the path to the jpackage tool by default
         if (Boolean.getBoolean('download.jpackage')) {
-            jpackageHome = downloadJPackage()
+            jpackageHome = rootProject.ext.jpackageHome
         }
         skipInstaller = false
 
-        // rpmbuild doesn't like '-' characters in version
-        def appVersionForJpackage = os.linux ? version.replace('-', '.') : version
+        // Massage version string to be compatible with jpackage installers
+        // for the current OS platform
+        def appVersionForJpackage = normalizeAppVersion(version)
 
         // macOS options
         imageOptions = ["--verbose", "--resource-dir", "${projectDir}/src/macos/resource-dir", "--app-version", appVersionForJpackage]
@@ -100,48 +98,6 @@ jlink {
     }
 }
 
-// #### The code below is needed only if you use the downloadJPackage() method to install the jpackage tool ####
-// Code copied from build.gradle in https://github.com/beryx/fxgl-sliding-puzzle/
-
-/** @return  [url, extension, directory] */
-String[] getJPackageCoordinates() {
-    def jpackageBaseUrl = 'https://s3-us-west-2.amazonaws.com/static.msgilligan.com/jpackage'
-    def jpackageVersionString = 'openjdk-14-jpackage%2B1-49'
-
-    if(os.macOsX) return [
-            "${jpackageBaseUrl}/${jpackageVersionString}_osx-x64_bin.tar.gz",
-            'tar.gz',
-            'jdk-14.jdk/Contents/Home'
-    ]
-    if(os.windows) return [
-            "${jpackageBaseUrl}/${jpackageVersionString}_windows-x64_bin.zip",
-            'zip',
-            'jdk-14'
-    ]
-    return [
-            "${jpackageBaseUrl}/${jpackageVersionString}_linux-x64_bin.tar.gz",
-            'tar.gz',
-            'jdk-14'
-    ]
-}
-
-String downloadJPackage() {
-    def (url, extension, directory) = getJPackageCoordinates()
-    def downloadDir = "$buildDir/download"
-    tasks.jpackageImage.doFirst {
-        def execExt = os.windows ? '.exe' : ''
-        if(!file("$downloadDir/$directory/bin/jpackage$execExt").file) {
-            def jdkArchivePath = "$downloadDir/jdk-jpackage.$extension"
-            download {
-                src url
-                dest jdkArchivePath
-                overwrite false
-            }
-            copy {
-                from ((extension == 'tar.gz') ? tarTree(resources.gzip(jdkArchivePath)) : zipTree(jdkArchivePath))
-                into downloadDir
-            }
-        }
-    }
-    return "$downloadDir/$directory"
+if (Boolean.getBoolean('download.jpackage')) {
+    jpackage.dependsOn rootProject.expandJPackage
 }
