@@ -1,12 +1,7 @@
-def os = org.gradle.internal.os.OperatingSystem.current()
 def (url, extension, directory) = getJPackageCoordinates()
 def downloadDir = "$buildDir/download"
-def execExt = os.windows ? '.exe' : ''
 def jdkArchivePath = "$downloadDir/jdk-jpackage.$extension"
-//ext.jpackageHome = "$downloadDir/$directory"
-//project.ext.set('jpackageHome', "$downloadDir/$directory")
 ext {
-    os = org.gradle.internal.os.OperatingSystem.current()
     jpackageHome = "$downloadDir/$directory"
 }
 task downloadJPackage(type: Download) {
