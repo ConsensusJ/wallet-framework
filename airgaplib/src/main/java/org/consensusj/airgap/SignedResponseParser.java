@@ -25,7 +25,7 @@ import java.io.IOException;
  *
  */
 public class SignedResponseParser {
-    private final ObjectMapper mapper = new ObjectMapper();;
+    private final ObjectMapper mapper = new ObjectMapper();
 
     public TransactionSignatureResponse parse(String json) throws IOException {
         TransactionSignatureResponse response = mapper.readValue(json, TransactionSignatureResponse.class);
