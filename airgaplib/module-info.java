@@ -1,5 +1,5 @@
 /**
- *
+ * Unused Module Info file moved here after we downgraded this module to JDK 8
  */
 module org.consensusj.airgap {
     requires org.bitcoinj.core;
