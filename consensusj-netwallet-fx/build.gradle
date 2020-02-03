@@ -6,6 +6,10 @@ plugins {
     id 'org.javamodularity.moduleplugin'    version "1.5.0"
 }
 
+def appName = 'ConsensusJWallet'
+mainClassName = "netwalletfx.NetWalletFxApp"
+//mainClassName = "$moduleName/netwalletfx.NetWalletFxApp"
+
 sourceCompatibility = 11
 targetCompatibility = 11
 
@@ -55,13 +59,8 @@ patchModules.config = [
 
 javafx {
     version = javaFxVersion
-    modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.fxml', 'javafx.swing']
+    modules = ['javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.swing']
 }
-
-//mainClassName = "$moduleName/netwalletfx.NetWalletFxApp"
-mainClassName = "netwalletfx.NetWalletFxApp"
-
-def appName = 'ConsensusJWallet'
 
 jlink {
     addExtraDependencies("javafx")
