@@ -6,6 +6,10 @@ plugins {
     id 'org.javamodularity.moduleplugin'    version "1.5.0"
 }
 
+def appName = 'ConsensusJSigningWallet'
+mainClassName = "signwalletfx.SignWalletFxApp"
+//mainClassName = "$moduleName/signwalletfx.SignWalletFxApp"
+
 sourceCompatibility = 9
 targetCompatibility = 9
 
@@ -55,13 +59,10 @@ patchModules.config = [
 
 javafx {
     version = javaFxVersion
-    modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.fxml', 'javafx.swing']
+    modules = ['javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.swing']
 }
 
-//mainClassName = "$moduleName/signwalletfx.SignWalletFxApp"
-mainClassName = "signwalletfx.SignWalletFxApp"
-
-def appName = 'ConsensusJSigningWallet'
+def os = org.gradle.internal.os.OperatingSystem.current()
 
 jlink {
     addExtraDependencies("javafx")
@@ -92,9 +93,14 @@ jlink {
         // for the current OS platform
         def appVersionForJpackage = normalizeAppVersion(version)
 
-        // macOS options
-        imageOptions = ["--verbose", "--resource-dir", "${projectDir}/src/macos/resource-dir", "--app-version", appVersionForJpackage]
+        imageOptions = ["--verbose", "--app-version", appVersionForJpackage]
         installerOptions = ["--app-version", appVersionForJpackage]
+        if (os.macOsX) {
+            imageOptions += [ '--resource-dir', "${projectDir}/src/macos/resource-dir" ]
+            if (signJPackageImages) {
+                imageOptions += [ '--mac-sign' ]
+            }
+        }
     }
 }
 

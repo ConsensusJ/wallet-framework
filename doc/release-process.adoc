@@ -21,6 +21,15 @@
 . JAR artifacts are not published to Bintray, yet.
 
 
+== macOS signing and verification
+
+=== Verification
+
+----
+codesign --verify --verbose </path/to/dot.app>
+spctl --assess --verbose </path/to/dot.app>
+----
+
 == Announcements
 
 . Not yet.

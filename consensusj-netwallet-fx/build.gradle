@@ -62,6 +62,8 @@ javafx {
     modules = ['javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.swing']
 }
 
+def os = org.gradle.internal.os.OperatingSystem.current()
+
 jlink {
     addExtraDependencies("javafx")
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
@@ -91,9 +93,14 @@ jlink {
         // for the current OS platform
         def appVersionForJpackage = normalizeAppVersion(version)
 
-        // macOS options
-        imageOptions = ["--verbose", "--resource-dir", "${projectDir}/src/macos/resource-dir", "--app-version", appVersionForJpackage]
+        imageOptions = ["--verbose", "--app-version", appVersionForJpackage]
         installerOptions = ["--app-version", appVersionForJpackage]
+        if (os.macOsX) {
+            imageOptions += [ '--resource-dir', "${projectDir}/src/macos/resource-dir" ]
+            if (signJPackageImages) {
+                imageOptions += [ '--mac-sign' ]
+            }
+        }
     }
 }
 
