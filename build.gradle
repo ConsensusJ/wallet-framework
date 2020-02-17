@@ -23,6 +23,9 @@ buildScan {
     termsOfServiceAgree = 'yes'
 }
 
+rootProject.ext.signJPackageImages = signJPackageImages == "true" // create boolean in ext from property string
+logger.warn "rootProject.ext.signJPackageImages = ${rootProject.ext.signJPackageImages}"
+
 allprojects {
     apply plugin: 'java'
 
