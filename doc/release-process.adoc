@@ -25,6 +25,8 @@
 
 === Verification
 
+See https://www.macissues.com/2015/11/06/how-to-verify-app-signatures-in-os-x/
+
 ----
 codesign --verify --verbose </path/to/dot.app>
 spctl --assess --verbose </path/to/dot.app>
