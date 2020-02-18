@@ -35,7 +35,10 @@ dependencies {
     implementation "io.micronaut:micronaut-inject-java:${micronautVersion}"
     implementation "javax.inject:javax.inject:1"
 
-    implementation 'com.google.guava:guava:27.1-android'
+    implementation ('com.google.guava:guava:28.1-android') {
+        // prevent conflict with `io.micronaut.core`
+        exclude group: 'com.google.errorprone', module: 'error_prone_annotations'
+    }
     implementation 'de.jensd:fontawesomefx:8.0.0'
 
     implementation 'com.google.zxing:core:3.4.0'
