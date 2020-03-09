@@ -19,8 +19,8 @@ build:
     - ./gradlew -Ddownload.jpackage=true buildCI consensusj-netwallet-fx:jpackage --stacktrace
   artifacts:
     paths:
-      - airgapfx-wallet/build/jpackage
-      - airgapfx-wallet/build/libs
+      - consensusj-netwallet-fx/build/jpackage
+      - consensusj-signwallet-fx/build/jpackage
 
 # Note: You can test changes to this file locally with:
 # gitlab-runner exec docker --docker-privileged build
