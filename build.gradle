@@ -71,8 +71,6 @@ subprojects {
     }
 }
 
-
-
 apply from: 'gradle/bintray.gradle'
 apply from: 'gradle/downloadJPackage.gradle'
 

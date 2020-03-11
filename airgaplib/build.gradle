@@ -1,16 +1,16 @@
 plugins {
-    id 'java'
-    id 'groovy'
     id 'java-library'
+    id 'groovy'
     id 'maven'
     id 'eclipse'
+    id 'org.javamodularity.moduleplugin'    version "1.5.0"
 }
 
 /**
- * Java 8 compatibility for use on Android
+ * Java 9 compatibility (We may switch back to Java 8 for use on Android)
  */
-sourceCompatibility = 8
-targetCompatibility = 8
+sourceCompatibility = 9
+targetCompatibility = 9
 
 dependencies {
     api "${bitcoinjGroup}:${bitcoinjArtifact}:${bitcoinjVersion}"
@@ -21,7 +21,7 @@ dependencies {
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile 'com.msgilligan:bitcoinj-dsl:0.4.0'
+    testCompile 'com.msgilligan:bitcoinj-dsl:0.5.0'
 }
 
 ext.moduleName = 'org.consensusj.airgap'
