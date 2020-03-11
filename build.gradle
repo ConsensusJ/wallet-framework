@@ -34,6 +34,7 @@ allprojects {
 
     repositories {
         jcenter()
+        //mavenLocal()   // Uncomment to work with local snapshots
         maven { url 'https://dl.bintray.com/consensusj/maven' }
         maven { url 'https://dl.bintray.com/msgilligan/maven' } // ConsensusJ (bitcoinj DSL)
         maven { url 'https://dl.bintray.com/omni/maven' }           // OmniJ (RPC client)
