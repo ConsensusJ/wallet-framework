@@ -3,6 +3,12 @@
 
 A high-level view of the changes in each wallet-framework binary release.
 
+== v0.1.8-SNAPSHOT
+
+Released: Not yet
+
+* Upgrade to Gradle 6.3
+
 == v0.1.7
 
 Released: 2019.10.28
