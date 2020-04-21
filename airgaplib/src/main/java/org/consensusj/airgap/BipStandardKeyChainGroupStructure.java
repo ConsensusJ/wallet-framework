@@ -6,8 +6,6 @@ import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.wallet.KeyChainGroupStructure;
 
-import java.util.Collections;
-
 /**
  * KeyChainGroupStructure that supports BIP44, etc. This should be part of bitcoinj.
  */
@@ -25,8 +23,8 @@ public class BipStandardKeyChainGroupStructure implements KeyChainGroupStructure
     public static ChildNumber CHANGE_RECEIVING = new ChildNumber(0, false);
     public static ChildNumber CHANGE_CHANGE = new ChildNumber(1, false);
 
-    private static final HDPath BIP44_PARENT = new HDPath(true, Collections.singletonList(PURPOSE_BIP44));
-    private static final HDPath BIP84_PARENT = new HDPath(true, Collections.singletonList(PURPOSE_BIP84));
+    private static final HDPath BIP44_PARENT = HDPath.m(PURPOSE_BIP44);
+    private static final HDPath BIP84_PARENT = HDPath.m(PURPOSE_BIP84);
 
     public BipStandardKeyChainGroupStructure(NetworkParameters networkParameters) {
         if (networkParameters.getId().equals(NetworkParameters.ID_MAINNET)) {
