@@ -47,8 +47,7 @@ subprojects {
     apply plugin: 'groovy'
     /*
      * Wallet-Framework will target recent JDK versions. For now library modules will
-     * target JDK 11 and sample apps will also use JDK 11. We intend to migrate to
-     * JDK 14 as soon as it is final, since 14 should have `jpackage` included.
+     * target JDK 11 and sample apps will be built using JDK 14.
      * We want to focus on jpackage'd apps and these should always use recent JDK.
      */
     sourceCompatibility = 11
@@ -57,8 +56,8 @@ subprojects {
     dependencies {
         implementation "org.slf4j:slf4j-api:${slf4jVersion}"
 
-        testCompile "org.codehaus.groovy:groovy:${groovyVersion}:"
-        testCompile("org.spockframework:spock-core:${spockVersion}") {
+        testImplementation "org.codehaus.groovy:groovy:${groovyVersion}:"
+        testImplementation("org.spockframework:spock-core:${spockVersion}") {
             exclude module: "groovy-all"
         }
 
@@ -109,4 +108,3 @@ String normalizeAppVersion(final String appVersion) {
         return appVersion
     }
 }
-
